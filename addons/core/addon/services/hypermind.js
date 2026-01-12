@@ -189,11 +189,23 @@ export default class HyperMindService extends Service {
     const currentIndex = tierOrder.indexOf(currentTier);
     const entry = this.memoryStore[currentTier][key];
 
+    if (!entry) return;
+
     // Promote if accessed frequently
-    if (entry.metadata.accessCount > 10 && currentIndex < tierOrder.length - 1) {
+    if (
+      entry.metadata.accessCount > 10 &&
+      currentIndex < tierOrder.length - 1
+    ) {
       const newTier = tierOrder[currentIndex + 1];
-      this.memoryStore[newTier][key] = entry;
-      delete this.memoryStore[currentTier][key];
+      // Move entry to new tier
+      this.memoryStore[newTier] = {
+        ...this.memoryStore[newTier],
+        [key]: entry,
+      };
+      // Remove from current tier
+      // eslint-disable-next-line no-unused-vars
+      const { [key]: _removed, ...rest } = this.memoryStore[currentTier];
+      this.memoryStore[currentTier] = rest;
     }
   }
 
@@ -204,19 +216,25 @@ export default class HyperMindService extends Service {
 
   _updateContextGraph(scope) {
     // Add node to graph
-    this.contextGraph.nodes = [...this.contextGraph.nodes, {
-      id: scope.id,
-      type: 'scope',
-      data: scope,
-    }];
+    this.contextGraph.nodes = [
+      ...this.contextGraph.nodes,
+      {
+        id: scope.id,
+        type: 'scope',
+        data: scope,
+      },
+    ];
 
     // Add edge if parent exists
     if (scope.parent) {
-      this.contextGraph.edges = [...this.contextGraph.edges, {
-        from: scope.parent.id,
-        to: scope.id,
-        type: 'parent-child',
-      }];
+      this.contextGraph.edges = [
+        ...this.contextGraph.edges,
+        {
+          from: scope.parent.id,
+          to: scope.id,
+          type: 'parent-child',
+        },
+      ];
     }
   }
 

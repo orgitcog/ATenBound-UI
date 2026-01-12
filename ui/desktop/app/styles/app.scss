@@ -1,0 +1,426 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+@use 'rose/variables/sizing';
+@use 'rose/variables/media';
+@use 'rose/utilities/type';
+
+@use 'notify';
+@use 'rose';
+
+.rose-layout-centered {
+  > .rose-layout-page {
+    width: sizing.rems(l) * 18;
+  }
+
+  @media (max-width: media.width(small)) {
+    display: block;
+
+    > .rose-layout-page {
+      width: auto;
+    }
+  }
+}
+
+/**
+ * This section enables scrolling within the sidebar columns separately,
+ * rather than the whole viewport.  This ensures the sidebar and application
+ * header remain visible when scrolling.
+ */
+.rose-layout-global {
+  max-height: 100vh;
+
+  .rose-layout-global-body {
+    max-height: 100vh;
+    overflow: auto;
+
+    main {
+      /** This overrides the main defined within Rose.
+       * HDS has this set to 1.5rem top/bottom 3rem left/right. HDS assumes the usage of breadcrumbs
+       * but the DC have no breadcrumbs, so we will keep it at 3rem all around.
+      */
+      padding: 3rem;
+      flex-grow: 1;
+    }
+  }
+
+  .rose-layout-sidebar-sidebar,
+  .rose-layout-sidebar-body {
+    overflow-y: auto;
+  }
+}
+
+.rose-nav-sidebar {
+  margin-top: sizing.rems(xxl);
+
+  + .rose-nav-sidebar {
+    margin-top: 0;
+  }
+
+  .hds-icon {
+    margin-right: sizing.rems(xs);
+  }
+}
+
+.rose-form {
+  &:not(.full-width) {
+    width: 66%;
+  }
+
+  fieldset {
+    margin-bottom: sizing.rems(m);
+  }
+}
+
+.rose-header {
+  -webkit-app-region: drag;
+  min-height: sizing.rems(l) * 2;
+  position: relative;
+  -webkit-user-select: none;
+
+  .rose-header-brand,
+  .rose-header-nav,
+  .rose-header-utilities button {
+    -webkit-app-region: no-drag;
+  }
+
+  &.header-cushion {
+    padding-left: sizing.rems(l) * 3;
+  }
+
+  .button-window-minimize,
+  .button-window-fullscreen,
+  .button-window-close {
+    background: transparent;
+    border: transparent;
+    color: var(--white);
+    margin: sizing.rems(xs);
+  }
+
+  .button-window-close {
+    &:hover {
+      background: var(--failure);
+    }
+  }
+
+  .button-window-minimize,
+  .button-window-fullscreen {
+    &:hover {
+      background: var(--white);
+      color: var(--black);
+    }
+  }
+
+  .logotype {
+    display: none;
+  }
+
+  &.loading {
+    &::after {
+      animation: gradient 1s linear infinite;
+      background: repeating-linear-gradient(
+        to right,
+        var(--subtle),
+        var(--subtle),
+        var(--info),
+        var(--subtle),
+        var(--subtle)
+      );
+      background-position: -100% 0;
+      background-size: 200% auto;
+      content: ' ';
+      height: 3px;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 100%;
+
+      @keyframes gradient {
+        0% {
+          background-position: -100% 0;
+        }
+
+        100% {
+          background-position: -200% 0;
+        }
+      }
+    }
+  }
+}
+
+[class*='session-status-'] {
+  color: var(--ui-gray-subtler-2);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.branded-card {
+  border: 1px solid var(--ui-border-subtler-1);
+  border-radius: var(--token-border-radius-x-small);
+  margin: 0 auto;
+  margin-top: sizing.rems(l) * 1.25;
+  padding: (sizing.rems(l) * 4) (sizing.rems(l) * 3) (sizing.rems(l) * 2)
+    (sizing.rems(l) * 3);
+  position: relative;
+  width: sizing.rems(l) * 26;
+
+  &::before {
+    background-color: var(--black);
+    background-image: url('/brand-background.svg');
+    background-position: right;
+    background-repeat: no-repeat;
+    border-top-left-radius: var(--token-border-radius-x-small);
+    border-top-right-radius: var(--token-border-radius-x-small);
+    content: ' ';
+    height: sizing.rems(l) * 3.25;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  &::after {
+    background-image: url('/logo-app-full.svg');
+    background-position: (sizing.rems(l) * 2.5) 50%;
+    background-repeat: no-repeat;
+    background-size: sizing.rems(l) * 8;
+    content: ' ';
+    height: sizing.rems(l) * 3.25;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .branded-card-description {
+    margin-bottom: sizing.rems(l);
+  }
+}
+
+@media (width <= (media.width(medium))) {
+  .branded-card {
+    max-width: 100%;
+    width: auto;
+  }
+}
+
+.change-origin {
+  @include type.type(s);
+
+  color: var(--ui-border-starker-1);
+  margin: sizing.rems(l) 0 0 0;
+  text-align: center;
+}
+
+// Hidden secret component (app/components/hidden-secret)
+.hidden-secret {
+  display: flex;
+  align-items: center;
+
+  .secret-content {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0.75rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    line-height: normal;
+  }
+}
+
+.target-details-header {
+  display: flex;
+  align-items: center;
+
+  > * {
+    margin-right: 1rem;
+  }
+}
+
+.details-sidebar {
+  background-color: var(--token-color-palette-neutral-50);
+  border-radius: var(--token-border-radius-small);
+  padding: 1.5rem 2.5rem;
+
+  > :not(:last-child) {
+    margin-bottom: 2.25rem;
+  }
+
+  &.aliases {
+    .rose-metadata-list {
+      &.vertical {
+        row-gap: 0.1rem;
+      }
+    }
+  }
+
+  .title {
+    color: var(--token-color-palette-neutral-600);
+    margin-bottom: 0.75rem;
+  }
+
+  .resource-type {
+    text-transform: capitalize;
+  }
+
+  .hds-icon {
+    flex-shrink: 0;
+  }
+}
+
+.details-screen-body {
+  .rose-layout-body-content {
+    margin-top: 1.5rem;
+  }
+
+  /* stylelint-disable selector-class-pattern */
+  .hds-tabs__panel {
+    margin-top: 1.5rem;
+  }
+}
+
+// Proxy URL
+.proxy-url-container {
+  display: flex;
+  gap: 1.75rem;
+  justify-content: flex-start;
+  margin-bottom: 1.75rem;
+
+  .hds-dropdown-toggle-button {
+    width: 9.375rem;
+  }
+
+  .hds-copy-snippet {
+    width: auto;
+  }
+}
+
+.proxy-url-container.rdp-target {
+  margin-top: 1rem;
+}
+
+// Credentials Panel
+.credential-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+
+  .title {
+    font-weight: var(--token-typography-font-weight-bold);
+  }
+
+  .hds-form-field--layout-flag {
+    margin-bottom: 0;
+  }
+}
+
+.credential-panel-body {
+  border: 1px solid var(--token-color-border-primary);
+  border-radius: var(--token-border-radius-small);
+  display: flex;
+  margin-top: 0.75rem;
+
+  .credential-header {
+    padding: 1.5rem;
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .credential-secret {
+    width: 66%;
+    margin: 0.75rem;
+
+    .secret-container {
+      margin: 0.75rem 0.5rem;
+      border-bottom: 1px solid var(--token-color-border-primary);
+      word-break: break-word;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      .hidden-secret {
+        margin: 0.25rem 0;
+      }
+    }
+  }
+}
+
+.credential-name,
+.credential-description {
+  overflow-wrap: break-word;
+}
+
+.raw-credential-panel-body {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+// Unsupported controller modal
+.unsupported-modal-body {
+  display: grid;
+  gap: 1rem;
+}
+
+.unsupported-modal-footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.link-copy-button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: inherit;
+}
+
+// Settings
+.settings-card {
+  .hds-card__container {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .header-and-icon {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    ~ * {
+      padding-left: 2.8rem;
+    }
+  }
+
+  .action {
+    margin-left: auto;
+  }
+
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+
+    > div {
+      flex-basis: 30%;
+    }
+
+    .large-column {
+      flex-grow: 1;
+    }
+
+    .hds-alert {
+      flex-basis: 100%;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<div class='rose-form-checkbox{{if @error " error"}} {{if @inline " inline"}}'>
+  {{! template-lint-disable no-builtin-form-components }}
+  <Input
+    ...attributes
+    class='rose-form-checkbox-field'
+    id={{this.id}}
+    name={{@name}}
+    disabled={{@disabled}}
+    onChange={{@onChange}}
+    @type='checkbox'
+    @checked={{if @checked true false}}
+    aria-describedby='{{if @helperText (concat "helper-text-" this.id)}} {{if
+      @error
+      (concat "errors-" this.id)
+    }}'
+  />
+
+  <label class='rose-form-checkbox-label' for={{this.id}}>
+    <Hds::Text::Body>{{@label}}</Hds::Text::Body>
+    {{#if @description}}
+      <Hds::Text::Body
+        @tag='p'
+        @weight='semibold'
+        class='rose-form-checkbox-label-description'
+      >{{@description}}</Hds::Text::Body>
+    {{/if}}
+  </label>
+
+  {{#if @helperText}}
+    <Rose::Form::HelperText @id='helper-text-{{this.id}}' @error={{@error}}>
+      {{@helperText}}
+    </Rose::Form::HelperText>
+  {{/if}}
+
+  {{yield
+    (hash errors=(component 'rose/form/errors' id=(concat 'errors-' this.id)))
+  }}
+
+</div>

@@ -1,0 +1,58 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+@use '../../variables/sizing';
+@use '../../variables/media';
+
+.rose-layout-page {
+  display: grid;
+  grid-template-areas:
+    'header header header'
+    'navigation navigation navigation'
+    'body body body';
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 1fr;
+
+  .rose-layout-page-header {
+    grid-area: header;
+    margin-bottom: sizing.rems(s);
+
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: sizing.rems(xs);
+      margin: 0;
+
+      .doc-link {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .hds-copy-snippet {
+      align-self: start;
+      margin-top: sizing.rems(s);
+    }
+  }
+
+  .rose-layout-page-navigation {
+    grid-area: navigation;
+  }
+
+  .rose-layout-page-body {
+    grid-area: body;
+    width: 100%;
+  }
+}
+
+@media (width <= (media.width(small))) {
+  .rose-layout-page {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'header'
+      'navigation'
+      'body';
+  }
+}

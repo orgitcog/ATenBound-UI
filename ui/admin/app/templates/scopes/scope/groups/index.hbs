@@ -1,0 +1,137 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.group.title_plural'}}
+        <DocLink @doc='group' />
+      </PH.Title>
+      {{#if @model.doGroupsExist}}
+        <PH.Description>
+          {{t 'resources.group.description'}}
+        </PH.Description>
+      {{/if}}
+      {{#if (can 'create model' this.scope collection='groups')}}
+        {{#if @model.doGroupsExist}}
+          <PH.Actions>
+            <Hds::Button
+              @route='scopes.scope.groups.new'
+              @text={{t 'resources.group.titles.new'}}
+            />
+          </PH.Actions>
+        {{/if}}
+      {{/if}}
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='search-filtering'>
+
+    {{#if @model.doGroupsExist}}
+      <Hds::SegmentedGroup as |S|>
+        <S.TextInput
+          @value={{this.search}}
+          @type='search'
+          placeholder={{t 'actions.search'}}
+          aria-label={{t 'actions.search'}}
+          {{on 'input' this.handleSearchInput}}
+        />
+      </Hds::SegmentedGroup>
+      {{#if @model.groups}}
+
+        <Hds::Table
+          @valign='middle'
+          @sortBy={{this.sortAttribute}}
+          @sortOrder={{this.sortDirection}}
+          @onSort={{this.sortBy}}
+        >
+          <:head as |H|>
+            <H.Tr>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'name'}}
+                @sortOrder={{if (eq 'name' H.sortBy) H.sortOrder}}
+              >
+                {{t 'form.name.label'}}
+              </H.ThSort>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'id'}}
+                @sortOrder={{if (eq 'id' H.sortBy) H.sortOrder}}
+              >
+                {{t 'form.id.label'}}
+              </H.ThSort>
+            </H.Tr>
+          </:head>
+
+          <:body as |B|>
+            {{#each @model.groups as |data|}}
+              <B.Tr>
+                <B.Td>
+                  {{#if (can 'read group' data)}}
+                    <LinkTo
+                      @route='scopes.scope.groups.group'
+                      @model={{data.id}}
+                    >
+                      {{data.displayName}}
+                    </LinkTo>
+                  {{else}}
+                    {{data.displayName}}
+                  {{/if}}
+                  <Hds::Text::Body @tag='p'>
+                    {{data.description}}
+                  </Hds::Text::Body>
+                </B.Td>
+                <B.Td>
+                  <Hds::Copy::Snippet
+                    @textToCopy={{data.id}}
+                    @color='secondary'
+                  />
+                </B.Td>
+              </B.Tr>
+            {{/each}}
+          </:body>
+        </Hds::Table>
+        <Rose::Pagination
+          @totalItems={{@model.totalItems}}
+          @currentPage={{this.page}}
+          @currentPageSize={{this.pageSize}}
+        />
+      {{else}}
+        <Hds::ApplicationState data-test-no-groups-results as |A|>
+          <A.Header @title={{t 'titles.no-results-found'}} />
+          <A.Body
+            @text={{t
+              'descriptions.no-search-results'
+              query=this.search
+              resource=(t 'resources.group.title_plural')
+            }}
+          />
+        </Hds::ApplicationState>
+      {{/if}}
+
+    {{else}}
+      <Hds::ApplicationState as |A|>
+        <A.Header @title={{t 'resources.group.messages.welcome.title'}} />
+        <A.Body @text={{this.messageDescription}} />
+        {{#if (can 'create model' this.scope collection='groups')}}
+          <A.Footer as |F|>
+            <F.LinkStandalone
+              @icon='plus-circle'
+              @text={{t 'titles.new'}}
+              @route='scopes.scope.groups.new'
+            />
+          </A.Footer>
+        {{/if}}
+      </Hds::ApplicationState>
+
+    {{/if}}
+
+  </page.body>
+
+</Rose::Layout::Page>

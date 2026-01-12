@@ -1,0 +1,37 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'titles.new')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.group.titles.new'}}
+  @route='scopes.scope.groups.new'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.group.titles.new'}}
+        <DocLink @doc='group' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.group.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+    <Form::Group
+      @model={{@model}}
+      @submit={{fn this.groups.save @model}}
+      @cancel={{fn this.groups.cancel @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

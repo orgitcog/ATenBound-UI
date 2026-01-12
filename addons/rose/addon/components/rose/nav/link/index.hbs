@@ -1,0 +1,14 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{#if @model}}
+  <LinkTo @route={{@route}} @model={{@model}} class='rose-nav-link'>
+    {{yield}}
+  </LinkTo>
+{{else}}
+  <LinkTo @route={{@route}} class='rose-nav-link'>
+    {{yield}}
+  </LinkTo>
+{{/if}}

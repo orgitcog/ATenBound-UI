@@ -1,0 +1,41 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <AuthMethods::AuthMethod::Header @model={{@model}} @header={{PH}} />
+      <PH.Actions>
+        <AuthMethods::AuthMethod::Actions
+          @model={{@model}}
+          @changeState={{this.authMethods.changeState}}
+          @removeAsPrimary={{this.authMethods.removeAsPrimary}}
+          @makePrimary={{this.authMethods.makePrimary}}
+          @delete={{this.authMethods.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <AuthMethods::AuthMethod::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body>
+    <Form::AuthMethod
+      @model={{@model}}
+      @edit={{fn this.authMethods.edit @model}}
+      @submit={{fn this.authMethods.save @model}}
+      @cancel={{fn this.authMethods.cancel @model}}
+      @removeItemByIndex={{fn this.authMethods.removeItemByIndex @model}}
+      @addStringItem={{fn this.authMethods.addStringItem @model}}
+      @addAccountMapItem={{fn this.authMethods.addAccountMapItem @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

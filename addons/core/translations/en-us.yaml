@@ -1,0 +1,182 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: BUSL-1.1
+
+auth:
+  titles:
+    no-scopes: No Scopes Available
+    flow-success: Successful authentication
+    flow-error: Could not authenticate
+  descriptions:
+    no-scopes: No scopes were found.  To authenticate, ask your administrator to create a scope and grant you access.
+    choose-org: Choose a scope to authenticate.
+    authenticating-with-org: 'Scope:  You are authenticating with organization "{name}"'
+    flow-success: You've successfully authenticated.  You may now close this window and return to the client.
+    flow-error: Something went wrong while authenticating.  Please close this window and try again.  If the problem persists, notify your administrator.
+cluster-url:
+  connected-to: Connected to
+titles:
+  home: Home
+  iam: IAM
+  new: New
+  details: Details
+  overview: Overview
+  settings: Settings
+  empty-set: No Items Yet
+  global: Global
+  actions: Actions
+  documentation: Documentation
+  abandon-confirm: Discard unsaved changes?
+  welcome-to-boundary: Welcome to Boundary
+  label: Label
+  value: Value
+  no-results: No Results
+  choose-a-provider: Choose a provider
+  provider: Provider
+  success: Success
+  create-resources: Create Resources
+  choose-an-option: Choose an option
+  feature-edition: 'Edition: {edition}'
+  no-results-found: No results found
+  filters-applied: 'Filters Applied:'
+  unit: Unit
+  not-set: Not set
+  year: '{numberOfYears, plural, =1 {# year} other {# years}}'
+  days: '{days, plural, =1 {# day} other {# days}}'
+  workers: Workers
+  no-worker-filter: No worker filter added
+  scope-level: '{scope} Level'
+  scope-iam: '{scope} IAM'
+  project-actions: Project Actions
+  user-menu: User Menu
+  back-link: 'Back to {scope}'
+  authenticated: Signed in as
+descriptions:
+  empty-set: There are no items to display yet.  You may be able to add items or try back later.
+  cluster-url-initialization: To get started, please enter your cluster URL
+  create-but-not-list: You do not have permission to list {resource}, but you can create new instances.
+  neither-list-nor-create: You do not have permission to list or create {resource}.
+  cannot-download: You do not have permission to download and playback {resource}.
+  no-results: We found no matching records.
+  choose-a-provider: There are several built-in plugins for the most common providers. You can choose from one of the included plugins or use a custom plugin.
+  provider: This is the provider for this host catalog. The format of the host set filters are specific to each provider.
+  no-search-results: Sorry, we weren't able to find any {resource} for "{query}".
+  no-filter-results: Sorry, we weren’t able to find any {resource} within the filtered parameters.
+  and-more: ...and more
+  view-all-orgs: 'View all orgs ({total})'
+  view-all-projects: 'View all projects ({total})'
+questions:
+  delete-confirm: Are you sure you want to delete this resource?
+  remove-confirm: Are you sure you want to remove this association?
+  abandon-confirm: Are you sure you want to navigate away?  Your unsaved changes will be lost.
+  retry-confirm: Would you like to retry?
+  clear-confirm: Are you sure you want to clear the resource id?
+themes:
+  system: System Default
+  light: Light
+  dark: Dark
+onboarding:
+  title: Onboarding
+  add-target:
+    titles:
+      have-a-target: Have a target to test?
+      target-address: Target Address
+      target-port: Default Port
+      target-setup-info: We’ll set up scopes for you
+    descriptions:
+      setup-first-target: In Boundary, a “target” defines a server that your users will connect to. We can help you set up your first target for proof-of-concept testing, or you can skip this step if you don’t want to do it right now.
+      target-address: Host name or IP address.
+      target-port: The default port on which to connect.
+      target-setup-info: Targets live in projects, and projects live in orgs. We will create these example scopes for you but they can be edited or deleted later.
+  success:
+    titles:
+      connect: Connect to your target
+      desktop: Using Boundary Desktop
+      developers: Developers
+      controller: Controller URL
+      creation-success: We have created your scopes and target
+    descriptions:
+      download: Download the Boundary Desktop app to browse and connect to targets (available for Windows, Mac, and Linux)
+      developers: You can also connect to targets using the Boundary CLI or API.
+      controller: Use this URL to sign in to Boundary
+      role: You can now connect to the target with the Boundary Desktop app, command-line (CLI) or API. Boundary grants access to resources based on roles, and we have added you to the `demo` role to give you access to this target. Make sure to add this role to any new users if you want them to access it too.
+    links:
+      install: Install the Boundary Desktop app
+      learn: Learn about Boundary Desktop app
+      cli: Learn about Boundary command-line (CLI)
+      api: Learn about Boundary API
+unsupported-controller:
+  title: Unsupported controller version
+  description:
+    message: The controller you have connected to is not supported by this version of the desktop app. You’ll be unable to see and connect to any targets as a result.
+    install: Download the supported version of the desktop app to fix this issue.
+  buttons:
+    download: Download supported version
+    releases-page: Go to releases page
+    change-cluster-url: Change cluster URL
+  error: Unable to download supported version of desktop app. You’ll need to download version 1.7.1 from the releases page
+settings:
+  application: Application
+  cli: CLI
+  cache-daemon: Cache Daemon
+  client-agent:
+    title: Boundary Client Agent
+    description: Required to use Transparent Sessions
+  client: Client
+  version: Version
+  color-theme: Color Theme
+  provider: Provider
+  hcp: HashiCorp Cloud Platform
+  self-managed: Self-managed
+  server:
+    title: Server
+    description: Boundary connects you to targets using this server managed by your organization.
+  logs:
+    title: Logs
+    logging-level: Logging level
+    log-location: Log location
+    levels:
+      error: Error
+      warn: Warn
+      info: Info
+      debug: Debug
+  alerts:
+    cache-daemon: There may be a problem with the cache daemon
+    client-agent: There may be a problem with the client agent
+  preferred-clients:
+    title: Preferred Clients
+    description: Select the applications for Boundary to use when opening these target types.
+    table:
+      header:
+        protocol: Protocol
+        client: Client
+      data:
+        protocols:
+          windows-rdp: Windows RDP
+        clients:
+          none: None
+          mstsc: Remote Desktop Connection (mstsc)
+          windows-app: Windows App
+          none-detected: 'None detected. We recommend <a href={rdpClientLink} target="_blank" rel="noopener noreferrer">{rdpClientName}</a>.'
+worker-filter-generator:
+  title: Filter generator
+  description: Choose what you want to format into a filter.
+  link: Learn more about formatting a worker filter.
+  toggle:
+    title: Show filter generator
+    description: The generator will automatically generate a pre-formatted filter for you. You can copy the result to the editor above.
+  input-values:
+    title: Input values
+    description: Next, input what you want to format.
+  formatted-result:
+    title: Formatted result
+    description: Copy and paste this into the editor above.
+    label: Generated result
+  tag:
+    label: Tag
+    helper: Format a worker tag
+  name:
+    label: Name
+    helper: Format a worker name
+  operator:
+    matches: matches (regex)
+    contains: contains

@@ -1,0 +1,17 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+@use 'global';
+@use 'sidebar';
+@use 'page';
+@use 'centered';
+@use 'body-content';
+
+// TODO:  this is prescriptive and can be removed if it becomes a problem,
+// but used here reflects the fact that the "main" element, of which there
+// can only be one per page, generally has padding in Structure layouts.
+main {
+  padding: 1.5rem 3rem;
+}

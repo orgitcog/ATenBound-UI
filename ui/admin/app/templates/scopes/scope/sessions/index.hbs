@@ -1,0 +1,209 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.session.title_plural'}}
+        <DocLink @doc='session' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.session.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='search-filtering'>
+    {{#if @model.doSessionsExist}}
+      <div class='search-filtering-toolbar'>
+        <Hds::SegmentedGroup data-test-sessions-bar as |S|>
+          <S.TextInput
+            @value={{this.search}}
+            @type='search'
+            placeholder={{t 'actions.search'}}
+            aria-label={{t 'actions.search'}}
+            {{on 'input' this.handleSearchInput}}
+          />
+          {{#if @model.canListUsers}}
+            <S.Generic>
+              <Dropdown
+                name='user'
+                @toggleText={{t 'resources.user.title'}}
+                @itemOptions={{this.userFilters.options}}
+                @checkedItems={{this.users}}
+                @applyFilter={{fn this.applyFilter 'users'}}
+                @isSearchable={{true}}
+                @searchTerm={{this.userFilters.search}}
+                @updateSearchTerm={{fn
+                  this.onFilterSearch.perform
+                  'userFilters'
+                }}
+                @isLoading={{or
+                  this.onFilterSearch.isRunning
+                  this.loadItems.isRunning
+                }}
+                as |FD selectItem itemOptions|
+              >
+                {{#each itemOptions as |itemOption|}}
+                  <FD.Checkbox
+                    @value={{itemOption.id}}
+                    checked={{includes itemOption.id this.users}}
+                    {{on 'change' selectItem}}
+                  >
+                    {{or itemOption.name itemOption.id}}
+                  </FD.Checkbox>
+                {{/each}}
+              </Dropdown>
+            </S.Generic>
+          {{/if}}
+          {{#if @model.canListTargets}}
+            <S.Generic>
+              <Dropdown
+                name='target'
+                @toggleText={{t 'resources.target.title'}}
+                @itemOptions={{this.targetFilters.options}}
+                @checkedItems={{this.targets}}
+                @applyFilter={{fn this.applyFilter 'targets'}}
+                @isSearchable={{true}}
+                @searchTerm={{this.targetFilters.search}}
+                @updateSearchTerm={{fn
+                  this.onFilterSearch.perform
+                  'targetFilters'
+                }}
+                @isLoading={{or
+                  this.onFilterSearch.isRunning
+                  this.loadItems.isRunning
+                }}
+                as |FD selectItem itemOptions|
+              >
+                {{#each itemOptions as |itemOption|}}
+                  <FD.Checkbox
+                    @value={{itemOption.id}}
+                    checked={{includes itemOption.id this.targets}}
+                    {{on 'change' selectItem}}
+                  >
+                    {{itemOption.name}}
+                  </FD.Checkbox>
+                {{/each}}
+              </Dropdown>
+            </S.Generic>
+          {{/if}}
+          <S.Generic>
+            <Dropdown
+              name='status'
+              @toggleText={{t 'form.status.label'}}
+              @itemOptions={{this.sessionStatusOptions}}
+              @checkedItems={{this.status}}
+              @applyFilter={{fn this.applyFilter 'status'}}
+            />
+          </S.Generic>
+        </Hds::SegmentedGroup>
+        <ToolbarRefresher @onClick={{this.refresh}} />
+      </div>
+
+      <FilterTags @filters={{this.filters}} />
+
+      {{#if @model.sessions}}
+        <Hds::Table
+          @valign='middle'
+          @onSort={{this.onSort}}
+          @sortBy={{this.sortAttribute}}
+          @sortOrder={{this.sortDirection}}
+        >
+          <:head as |H|>
+            <H.Tr>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'id'}}
+                @sortOrder={{if (eq 'id' H.sortBy) H.sortOrder}}
+              >{{t 'form.id.label'}}</H.ThSort>
+              <H.Th>{{t 'resources.user.title'}}</H.Th>
+              <H.Th>{{t 'resources.target.title'}}</H.Th>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'created_time'}}
+                @sortOrder={{if (eq 'created_time' H.sortBy) H.sortOrder}}
+              >{{t 'form.started.label'}}</H.ThSort>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'status'}}
+                @sortOrder={{if (eq 'status' H.sortBy) H.sortOrder}}
+              >{{t 'form.status.label'}}</H.ThSort>
+              <H.Th>{{t 'titles.actions'}}</H.Th>
+            </H.Tr>
+          </:head>
+          <:body as |B|>
+            {{#each @model.sessions as |data|}}
+              <B.Tr data-test-sessions-table-row={{data.id}}>
+                <B.Td>
+                  <Hds::Copy::Snippet
+                    data-test-session={{data.id}}
+                    @textToCopy={{data.id}}
+                    @color='secondary'
+                  />
+                </B.Td>
+                <B.Td>
+                  {{data.user.displayName}}
+                </B.Td>
+                <B.Td>
+                  {{data.target.displayName}}
+                </B.Td>
+                <B.Td>
+                  <time datetime={{format-date-iso data.created_time}}>
+                    {{format-date-iso-human data.created_time}}
+                  </time>
+                </B.Td>
+                <B.Td>
+                  <SessionStatus @model={{data}} />
+                </B.Td>
+                <B.Td>
+                  {{#if (can 'cancel session' data)}}
+                    <Hds::Button
+                      @color='secondary'
+                      @text={{t 'actions.cancel'}}
+                      {{on 'click' (fn this.cancelSession data)}}
+                    />
+                  {{/if}}
+                </B.Td>
+              </B.Tr>
+            {{/each}}
+          </:body>
+        </Hds::Table>
+        <Rose::Pagination
+          @totalItems={{@model.totalItems}}
+          @currentPage={{this.page}}
+          @currentPageSize={{this.pageSize}}
+        />
+      {{else}}
+        <Hds::ApplicationState data-test-no-session-results as |A|>
+          <A.Header @title={{t 'titles.no-results-found'}} />
+          <A.Body
+            @text={{t
+              (if
+                this.search
+                'descriptions.no-search-results'
+                'descriptions.no-filter-results'
+              )
+              query=this.search
+              resource=(t 'resources.session.title_plural')
+            }}
+          />
+        </Hds::ApplicationState>
+      {{/if}}
+    {{else}}
+      <Hds::ApplicationState data-test-no-sessions as |A|>
+        <A.Header
+          @title={{t 'resources.session.messages.none-friendly.title'}}
+        />
+        <A.Body
+          @text={{t 'resources.session.messages.none-friendly.description'}}
+        />
+      </Hds::ApplicationState>
+    {{/if}}
+  </page.body>
+
+</Rose::Layout::Page>

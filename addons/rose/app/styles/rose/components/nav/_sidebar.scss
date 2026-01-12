@@ -1,0 +1,69 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+@use '../../variables/sizing';
+@use '../../utilities/type';
+@use 'sass:math';
+@use '../../variables/color/sass';
+
+.rose-nav-sidebar {
+  $three-px: sizing.rems(xxxs) + sizing.rems(xxxxs);
+  $y-padding: sizing.rems(xs);
+
+  padding-top: $y-padding;
+  padding-bottom: $y-padding;
+  border-bottom: sizing.rems(xxxxs) solid #{sass.color(ui-gray, 700)};
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  // TODO revisit the title
+  .rose-nav-title {
+    @include type.type(xs);
+
+    display: none;
+    color: #{sass.color(ui-gray, 400)};
+    font-weight: var(--token-typography-font-weight-semibold);
+    text-transform: uppercase;
+
+    $line-height: math.div(20, 12);
+
+    line-height: $line-height;
+    padding: 0 sizing.rems(m);
+    margin-bottom: $three-px;
+    border-bottom: sizing.rems(xxxxs) solid #{sass.color(ui-gray, 700)};
+  }
+
+  .rose-nav-link {
+    @include type.type(s);
+
+    display: block;
+    color: var(--white);
+
+    $line-height: math.div(36, 14);
+
+    line-height: $line-height;
+    text-decoration: none;
+    padding: 0 sizing.rems(m);
+    border-right: $three-px solid transparent;
+
+    .hds-icon {
+      opacity: 0.65;
+      vertical-align: text-bottom;
+    }
+
+    &:hover {
+      color: var(--white);
+      background-color: #{sass.color(ui-gray, 800)};
+    }
+
+    &.active {
+      color: var(--white);
+      border-color: #{sass.color(ui-gray, 300)};
+      background-color: #{sass.color(ui-gray, 800)};
+    }
+  }
+}

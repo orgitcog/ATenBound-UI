@@ -1,0 +1,20 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{#if @model.isUnknownStatus}}
+  <Hds::Badge
+    @text={{@model.status}}
+    @color={{this.statusBadgeColor}}
+    @icon={{this.statusBadgeIcon}}
+    @type={{this.statusBadgeType}}
+  />
+{{else}}
+  <Hds::Badge
+    @text={{this.statusBadgeText}}
+    @color={{this.statusBadgeColor}}
+    @icon={{this.statusBadgeIcon}}
+    @type={{this.statusBadgeType}}
+  />
+{{/if}}

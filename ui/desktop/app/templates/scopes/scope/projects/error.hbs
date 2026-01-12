@@ -1,0 +1,33 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'errors.generic.title')}}
+
+{{! Most error types will land here }}
+{{#if @model.errors}}
+  <Rose::Layout::Centered>
+    {{#each @model.errors as |error|}}
+      <Error::Message
+        @status={{error.status}}
+        @docLink={{doc-url 'support-page'}}
+      />
+    {{/each}}
+  </Rose::Layout::Centered>
+{{/if}}
+
+{{! But a disconnected state doesn't get normalized errors }}
+{{#unless @model.errors}}
+  <Rose::Layout::Centered>
+    <Error::Message @docLink={{doc-url 'support-page'}} />
+  </Rose::Layout::Centered>
+
+  <Rose::Layout::Centered>
+    <Hds::Button
+      @color='primary'
+      @text={{t 'actions.disconnect'}}
+      {{on 'click' this.appUtilities.disconnect}}
+    />
+  </Rose::Layout::Centered>
+{{/unless}}

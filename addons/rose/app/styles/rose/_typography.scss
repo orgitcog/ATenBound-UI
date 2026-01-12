@@ -1,0 +1,49 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+@use 'variables/typography';
+@use 'variables/sizing';
+@use 'utilities/type' as type-mixins;
+
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  // Used by Rose::Tabs and '/' in breadcrumbs
+  // and link list panel
+  font-family: var(--token-typography-font-stack-text);
+
+  // this is used across the app
+  line-height: typography.line-height(m);
+}
+
+// This is use to set the color and background color
+// of the ember application depending
+// on where the ember application is mounted
+// When running the tests, the ember application
+// is mounted on a div element with the class 'ember-application'
+// When running the app, the ember application
+// is mounted on the body element
+.ember-application {
+  // these are used across the app
+  color: var(--stark);
+  background-color: var(--subtle);
+}
+
+// Many elements get margin by default
+// but if we want to remove it we can use this class
+.remove-margin {
+  margin: 0;
+}
+
+.p {
+  margin-bottom: sizing.rems(m);
+}
+
+// once we move to Hds::Link::Standalone we can remove this
+a {
+  color: var(--action);
+}

@@ -1,0 +1,40 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <HostCatalogs::HostCatalog::HostSets::HostSet::Header
+        @model={{@model}}
+        @header={{PH}}
+      />
+      <PH.Actions>
+        <HostCatalogs::HostCatalog::HostSets::HostSet::Actions
+          @model={{@model}}
+          @delete={{this.hostSets.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <HostCatalogs::HostCatalog::HostSets::HostSet::Navigation
+      @model={{@model}}
+    />
+  </page.navigation>
+
+  <page.body>
+    <Form::HostSet
+      @model={{@model}}
+      @edit={{fn this.hostSets.edit @model}}
+      @submit={{fn this.hostSets.save @model}}
+      @cancel={{fn this.hostSets.cancel @model}}
+    />
+  </page.body>
+</Rose::Layout::Page>

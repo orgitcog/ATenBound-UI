@@ -1,0 +1,53 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.role.scope.messages.manage-custom-scopes.title')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.role.scope.messages.manage-custom-scopes.title'}}
+  @route='scopes.scope.roles.role.manage-scopes.manage-custom-scopes'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.role.scope.messages.manage-custom-scopes.title'}}
+        <DocLink @doc='role.add-grant-scopes' />
+      </PH.Title>
+      <PH.Description>
+        {{#if @model.canSelectOrgs}}
+          {{t
+            'resources.role.scope.messages.manage-custom-scopes.description.0'
+          }}
+        {{else}}
+          {{t
+            'resources.role.scope.messages.manage-custom-scopes.description.1'
+          }}
+        {{/if}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='search-filtering'>
+    <Form::Role::ManageCustomScopes
+      @model={{@model}}
+      @search={{this.search}}
+      @filters={{this.filters}}
+      @orgs={{this.orgs}}
+      @orgScopes={{this.orgScopes}}
+      @page={{this.page}}
+      @pageSize={{this.pageSize}}
+      @handleSearchInput={{this.handleSearchInput}}
+      @applyFilter={{this.applyFilter}}
+      @submit={{fn this.setGrantScopes @model.role}}
+      @cancel={{fn this.cancel @model.role}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

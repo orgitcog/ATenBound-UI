@@ -1,0 +1,41 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+dist
+tmp
+
+# dependencies
+node_modules
+
+# misc
+.env*
+.pnp*
+.sass-cache
+.DS_Store
+connect.lock
+coverage
+coverage_*
+coverage-*
+libpeerconnection.log
+npm-debug.log*
+testem.log
+.watchman-cookie*
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide

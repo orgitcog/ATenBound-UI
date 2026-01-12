@@ -1,0 +1,125 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.role.principal.title_plural')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.role.principal.title_plural'}}
+  @route='scopes.scope.roles.role.principals'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.role.title'}}
+        <DocLink @doc='role' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.role.principal.description'}}
+      </PH.Description>
+      <PH.Generic>
+        <Hds::Copy::Snippet @textToCopy={{@model.role.id}} @color='secondary' />
+      </PH.Generic>
+      <PH.Actions>
+        <Roles::Role::Actions
+          @model={{@model.role}}
+          @delete={{this.roles.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Roles::Role::Nav @model={{@model.role}} />
+  </page.navigation>
+
+  <page.body>
+    {{#if @model.principals}}
+
+      <Hds::Table
+        @model={{@model.principals}}
+        @columns={{array
+          (hash label=(t 'form.name.label'))
+          (hash label=(t 'form.id.label'))
+          (hash label=(t 'form.type.label'))
+          (hash label=(t 'resources.scope.title'))
+          (hash label=(t 'titles.actions'))
+        }}
+        @valign='middle'
+      >
+        <:body as |B|>
+          <B.Tr>
+            <B.Td>
+              {{#if (can 'readPrincipal role' B.data)}}
+                <LinkToPrincipal @model={{B.data}} />
+              {{else}}
+                {{B.data.displayName}}
+              {{/if}}
+              {{#if B.data.accountName}}
+                <br /><Hds::Badge @text={{B.data.accountName}} />
+              {{/if}}
+            </B.Td>
+            <B.Td>
+              <Hds::Copy::Snippet
+                @textToCopy={{B.data.id}}
+                @color='secondary'
+              />
+            </B.Td>
+            <B.Td>
+              <PrincipalTypeBadge @model={{B.data}} />
+            </B.Td>
+            <B.Td>
+              <ScopeBadge @scope={{B.data.scopeModel}} />
+            </B.Td>
+            <B.Td>
+              {{#if (can 'removePrincipals role' @model.role)}}
+                <Hds::Dropdown as |dd|>
+                  <dd.ToggleIcon
+                    @icon='more-horizontal'
+                    @text={{t 'actions.manage'}}
+                    @hasChevron={{false}}
+                  />
+                  <dd.Interactive
+                    @color='critical'
+                    {{on
+                      'click'
+                      (fn this.roles.removePrincipal @model.role B.data)
+                    }}
+                  >{{t 'actions.remove'}}</dd.Interactive>
+                </Hds::Dropdown>
+              {{/if}}
+            </B.Td>
+          </B.Tr>
+        </:body>
+      </Hds::Table>
+
+    {{else}}
+
+      <Rose::Layout::Centered>
+        <Hds::ApplicationState as |A|>
+          <A.Header
+            @title={{t 'resources.role.principal.messages.welcome.title'}}
+          />
+          <A.Body
+            @text={{t 'resources.role.principal.messages.welcome.description'}}
+          />
+          <A.Footer as |F|>
+            <F.LinkStandalone
+              @icon='plus-circle'
+              @text={{t 'resources.role.principal.actions.add-principals'}}
+              @route='scopes.scope.roles.role.add-principals'
+            />
+          </A.Footer>
+        </Hds::ApplicationState>
+      </Rose::Layout::Centered>
+
+    {{/if}}
+  </page.body>
+
+</Rose::Layout::Page>

@@ -1,0 +1,11 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<li class='rose-metadata-list-item {{concat "hds-foreground-" @color}}'>
+  {{#if @icon}}
+    <Hds::Icon @name={{@icon}} />
+  {{/if}}
+  {{yield}}
+</li>

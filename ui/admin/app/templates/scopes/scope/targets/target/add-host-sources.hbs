@@ -1,0 +1,39 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.target.actions.add-host-sources')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.target.actions.add-host-sources'}}
+  @route='scopes.scope.targets.target.add-host-sources'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.target.host-source.messages.add.title'}}
+        <DocLink @doc='target.add-host-sources' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.target.host-source.messages.add.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+    <Form::Target::AddHostSets
+      @model={{@model.target}}
+      @hostCatalogs={{@model.hostCatalogs}}
+      @hostSets={{@model.hostSets}}
+      @submit={{fn this.save @model.target}}
+      @cancel={{this.cancel}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

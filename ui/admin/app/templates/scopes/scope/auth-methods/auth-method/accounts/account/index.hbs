@@ -1,0 +1,39 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <AuthMethods::AuthMethod::Accounts::Account::Header
+        @header={{PH}}
+        @model={{@model}}
+      />
+      <PH.Actions>
+        <AuthMethods::AuthMethod::Accounts::Account::Actions
+          @model={{@model}}
+          @delete={{this.accounts.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <AuthMethods::AuthMethod::Accounts::Account::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body>
+    <Form::Account
+      @model={{@model}}
+      @submit={{fn this.accounts.save @model}}
+      @cancel={{fn this.accounts.cancel @model}}
+    />
+
+  </page.body>
+
+</Rose::Layout::Page>

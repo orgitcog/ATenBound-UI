@@ -1,0 +1,53 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.role.principal.actions.add-principals')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.role.principal.actions.add-principals'}}
+  @route='scopes.scope.roles.role.add-principals'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.role.principal.messages.add-principals.title'}}
+        <DocLink @doc='role.add-principals' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.role.principal.messages.add-principals.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+
+    <Dropdown
+      name='scopeIds'
+      class='dropdown-checkbox-list'
+      @listPosition='bottom-left'
+      @toggleText={{t 'resources.scope.title_plural'}}
+      @itemOptions={{@model.scopes}}
+      @checkedItems={{this.scopeIds}}
+      @applyFilter={{fn this.applyFilter 'scopeIds'}}
+    />
+    <FilterTags @filters={{this.filters}} />
+    <br />
+
+    <Form::Role::AddPrincipals
+      @model={{@model.role}}
+      @users={{@model.users}}
+      @groups={{@model.groups}}
+      @managedGroups={{@model.managedGroups}}
+      @submit={{fn this.addPrincipals @model.role}}
+      @cancel={{this.cancel}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

@@ -1,0 +1,172 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.session-recording.channel.title')}}
+<Breadcrumbs::Item
+  @text={{reverse-indexed-display-name
+    'resources.session-recording.channel.title_index'
+    @model.channelRecording.connection_recording.channel_recordings
+    @model.channelRecording
+  }}
+  @route='scopes.scope.session-recordings.session-recording.channels-by-connection.channel'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header class='channel-header'>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{reverse-indexed-display-name
+          'resources.session-recording.channel.title_index'
+          @model.channelRecording.connection_recording.channel_recordings
+          @model.channelRecording
+        }}
+        <DocLink @doc='session-recording' />
+      </PH.Title>
+      <PH.Generic>
+        <Hds::Copy::Snippet
+          @textToCopy={{@model.channelRecording.id}}
+          @color='secondary'
+        />
+      </PH.Generic>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+    <Rose::Layout::BodyContent as |bc|>
+      <bc.Body>
+        {{outlet}}
+      </bc.Body>
+
+      <bc.Sidebar>
+        {{! Channel details information }}
+        <div class='section-details'>
+          <Hds::Text::Display @tag='h2' @size='400' @weight='bold'>{{t
+              'resources.session-recording.channel.details'
+            }}</Hds::Text::Display>
+          <Rose::MetadataList @orientation='vertical' as |list|>
+            {{! Start time }}
+            {{#if @model.channelRecording.start_time}}
+              <list.Item @icon='calendar' @color='faint'>
+                {{t 'form.started.label'}}
+                <time
+                  datetime={{format-date-iso
+                    @model.channelRecording.start_time
+                  }}
+                >
+                  {{format-date-iso @model.channelRecording.start_time}}
+                </time>
+              </list.Item>
+            {{/if}}
+            {{! Duration }}
+            {{#if @model.channelRecording.duration}}
+              <list.Item @icon='clock' @color='faint'>
+                {{t
+                  'resources.session-recording.duration'
+                  time=(format-time-duration @model.channelRecording.duration)
+                }}
+              </list.Item>
+            {{/if}}
+            {{! Bytes up }}
+            {{#if @model.channelRecording.bytes_up}}
+              <list.Item @icon='arrow-up' @color='success'>
+                {{t
+                  'resources.session-recording.up'
+                  bytes=(format-bytes-size @model.channelRecording.bytes_up)
+                }}
+              </list.Item>
+            {{/if}}
+            {{! Bytes down }}
+            {{#if @model.channelRecording.bytes_down}}
+              <list.Item @icon='arrow-down' @color='action'>
+                {{t
+                  'resources.session-recording.down'
+                  bytes=(format-bytes-size @model.channelRecording.bytes_down)
+                }}
+              </list.Item>
+            {{/if}}
+          </Rose::MetadataList>
+        </div>
+
+        {{! Related information }}
+        <div>
+          <Hds::Text::Display @tag='h2' @size='400' @weight='bold'>{{t
+              'resources.session-recording.related'
+            }}</Hds::Text::Display>
+          <LinkListPanel as |list|>
+            {{! User name }}
+            {{#if @model.sessionRecording.create_time_values.user}}
+              <list.Item
+                @icon='user'
+                @color='boundary'
+                @route='scopes.scope.users.user'
+                @model={{array
+                  @model.sessionRecording.create_time_values.user.scope.id
+                  @model.sessionRecording.create_time_values.user.id
+                }}
+                @text={{@model.sessionRecording.userDisplayName}}
+              />
+            {{/if}}
+            {{! Target name }}
+            {{#if @model.sessionRecording.create_time_values.target}}
+              <list.Item
+                @icon='target'
+                @color='boundary'
+                @route='scopes.scope.targets.target'
+                @model={{array
+                  @model.sessionRecording.create_time_values.target.scope.id
+                  @model.sessionRecording.create_time_values.target.id
+                }}
+                @text={{@model.sessionRecording.create_time_values.target.name}}
+              >
+                {{#if @model.sessionRecording.target.type}}
+                  <Hds::Badge @text={{@model.sessionRecording.target.type}} />
+                {{/if}}
+              </list.Item>
+            {{/if}}
+            {{! Bucket name or ID}}
+            {{#if @model.storageBucket}}
+              <list.Item
+                @icon='cloud-check'
+                @color='boundary'
+                @route='scopes.scope.storage-buckets.storage-bucket'
+                @model={{array
+                  @model.storageBucket.scope.id
+                  @model.storageBucket.id
+                }}
+                @text={{@model.storageBucket.displayName}}
+              />
+            {{/if}}
+            {{! Session Recording ID }}
+            <list.Item
+              @icon='film'
+              @color='boundary'
+              @text={{t 'resources.session-recording.title'}}
+            >
+              <Hds::Copy::Snippet
+                @textToCopy={{@model.sessionRecording.id}}
+                @color='secondary'
+              />
+            </list.Item>
+            {{! Connection Recording ID }}
+            <list.Item
+              @icon='connection'
+              @color='boundary'
+              @text={{t 'resources.session-recording.connection.title'}}
+            >
+              <Hds::Copy::Snippet
+                @textToCopy={{@model.channelRecording.connection_recording.id}}
+                @color='secondary'
+              />
+            </list.Item>
+          </LinkListPanel>
+        </div>
+      </bc.Sidebar>
+    </Rose::Layout::BodyContent>
+  </page.body>
+</Rose::Layout::Page>

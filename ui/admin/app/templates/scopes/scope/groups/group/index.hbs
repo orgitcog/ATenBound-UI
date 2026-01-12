@@ -1,0 +1,36 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <Groups::Group::Header @model={{@model}} @header={{PH}} />
+      <PH.Actions>
+        <Groups::Group::Actions
+          @model={{@model}}
+          @delete={{fn this.groups.delete @model}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+
+  </page.header>
+
+  <page.navigation>
+    <Groups::Group::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body>
+    <Form::Group
+      @model={{@model}}
+      @submit={{fn this.groups.save @model}}
+      @cancel={{fn this.groups.cancel @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

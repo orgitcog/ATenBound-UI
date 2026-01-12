@@ -1,0 +1,32 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.host-set.actions.add-hosts')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.host-set.actions.add-hosts'}}
+  @route='scopes.scope.host-catalogs.host-catalog.host-sets.host-set.add-hosts'
+/>
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <HostCatalogs::HostCatalog::HostSets::HostSet::AddHosts::Header
+        @header={{PH}}
+      />
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+    <Form::HostSet::AddHosts
+      @model={{@model.hostSet}}
+      @hosts={{@model.hosts}}
+      @submit={{fn this.addHosts @model.hostSet}}
+      @cancel={{this.cancel}}
+    />
+  </page.body>
+</Rose::Layout::Page>

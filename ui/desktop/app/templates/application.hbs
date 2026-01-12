@@ -1,0 +1,205 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (app-name)}}
+
+<Rose::Layout::Global as |layout|>
+
+  <layout.header>
+    <Rose::Header
+      class='{{if (is-loading) " loading"}}
+        {{if this.hasMacOSChrome " header-cushion"}}'
+      as |header|
+    >
+      <header.brand @logo='logo-app' @text={{(app-name)}} />
+
+      <header.nav>
+        <div id='header-nav'></div>
+      </header.nav>
+
+      <header.utilities>
+        {{#if this.showWindowActions}}
+          <Hds::Button
+            {{on 'click' this.close}}
+            class='button-window-close'
+            title={{t 'actions.close'}}
+            @text={{t 'actions.close'}}
+            @icon='x'
+            @isIconOnly={{true}}
+          />
+          <Hds::Button
+            {{on 'click' this.toggleFullScreen}}
+            class='button-window-fullscreen'
+            title={{t 'actions.fullscreen'}}
+            @text={{t 'actions.fullscreen'}}
+            @icon='square'
+            @isIconOnly={{true}}
+            @color='secondary'
+          />
+          <Hds::Button
+            {{on 'click' this.minimize}}
+            class='button-window-minimize'
+            title={{t 'actions.minimize'}}
+            @text={{t 'actions.minimize'}}
+            @icon='minus'
+            @isIconOnly={{true}}
+            @color='secondary'
+          />
+        {{/if}}
+
+        {{#if this.session.username}}
+          <Hds::Dropdown class='header-dropdown-button-override' as |dd|>
+            <dd.ToggleButton
+              @icon='user-circle'
+              @text={{this.session.username}}
+            />
+            <dd.Interactive
+              data-test-nav-signout-btn
+              {{on 'click' this.showModalOrLogout}}
+            >
+              {{t 'actions.deauthenticate'}}
+            </dd.Interactive>
+          </Hds::Dropdown>
+        {{else}}
+          <Hds::Dropdown class='header-dropdown-button-override' as |dd|>
+            <dd.ToggleIcon @icon='user-circle' @text={{t 'titles.user-menu'}} />
+            <dd.Interactive
+              data-test-nav-signout-btn
+              {{on 'click' this.showModalOrLogout}}
+            >
+              {{t 'actions.deauthenticate'}}
+            </dd.Interactive>
+          </Hds::Dropdown>
+        {{/if}}
+
+      </header.utilities>
+    </Rose::Header>
+  </layout.header>
+
+  <layout.body>
+    {{outlet}}
+  </layout.body>
+
+</Rose::Layout::Global>
+
+{{#if this.flashMessages.queue}}
+  <div class='ember-notify-cn'>
+    {{#each this.flashMessages.queue as |flash|}}
+      <div class='ember-notify-show ember-notify'>
+        <Hds::Toast
+          @color={{flash.color}}
+          @onDismiss={{fn flash.dismiss flash}}
+          data-test-toast-notification
+          as |T|
+        >
+          <T.Title>{{flash.title}}</T.Title>
+          <T.Description>{{flash.message}}</T.Description>
+
+          {{#if flash.button}}
+            <T.Button
+              @color='secondary'
+              @text={{flash.button.label}}
+              {{on 'click' (fn flash.button.action flash)}}
+            />
+          {{/if}}
+        </Hds::Toast>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}
+
+<PendingConfirmations as |confirmation accept deny|>
+  {{#if confirmation.options.isConnectError}}
+    <Hds::Modal @color='critical' as |M|>
+      <M.Header @icon='alert-diamond' @onDismiss={{deny}}>
+        {{t 'states.error'}}
+      </M.Header>
+      <M.Body>
+        <Hds::Text::Body @tag='p'>
+          {{confirmation.text}}
+        </Hds::Text::Body>
+        <br />
+        <Hds::Text::Body @tag='p'>
+          {{t 'questions.retry-confirm'}}
+        </Hds::Text::Body>
+      </M.Body>
+      <M.Footer>
+        <Hds::ButtonSet>
+          <Hds::Button
+            @text={{t 'actions.retry'}}
+            @color='primary'
+            {{on 'click' accept}}
+          />
+          <Hds::Button
+            @text={{t 'actions.cancel'}}
+            @color='secondary'
+            {{on 'click' deny}}
+          />
+        </Hds::ButtonSet>
+      </M.Footer>
+    </Hds::Modal>
+  {{else}}
+    <Hds::Modal @color='warning' as |M|>
+      <M.Header @icon='alert-triangle' @onDismiss={{deny}}>
+        {{t 'actions.confirm'}}
+      </M.Header>
+      <M.Body>
+        <Hds::Text::Body @tag='p'>
+          {{confirmation.text}}
+        </Hds::Text::Body>
+      </M.Body>
+      <M.Footer>
+        <Hds::ButtonSet>
+          <Hds::Button
+            @text={{t 'actions.ok'}}
+            @color='primary'
+            {{on 'click' accept}}
+          />
+          <Hds::Button
+            @text={{t 'actions.cancel'}}
+            @color='secondary'
+            {{on 'click' deny}}
+          />
+        </Hds::ButtonSet>
+      </M.Footer>
+    </Hds::Modal>
+  {{/if}}
+</PendingConfirmations>
+
+{{#if (or this.isLoggingOut this.isAppQuitting)}}
+  <Hds::Modal @onClose={{this.cancel}} data-test-close-sessions-modal as |M|>
+    {{#if this.isAppQuitting}}
+      <M.Header>
+        {{t 'resources.session.messages.stop-sessions-before-quit.title'}}
+      </M.Header>
+      <M.Body>
+        {{t 'resources.session.messages.stop-sessions-before-quit.description'}}
+      </M.Body>
+    {{else}}
+      {{! If not rendering the isAppQuitting modal, render isLoggingOut modal }}
+      <M.Header>
+        {{t 'resources.session.messages.stop-sessions-and-signout.title'}}
+      </M.Header>
+      <M.Body>
+        {{t 'resources.session.messages.stop-sessions-and-signout.description'}}
+      </M.Body>
+    {{/if}}
+    <M.Footer>
+      <Hds::ButtonSet>
+        <Hds::Button
+          {{on 'click' this.confirmCloseSessions}}
+          type='button'
+          @text={{t 'actions.ok'}}
+        />
+        <Hds::Button
+          {{on 'click' this.cancel}}
+          type='button'
+          @text={{t 'actions.cancel'}}
+          @color='secondary'
+        />
+      </Hds::ButtonSet>
+    </M.Footer>
+  </Hds::Modal>
+{{/if}}

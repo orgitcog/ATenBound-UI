@@ -1,0 +1,35 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <Workers::Worker::Header @model={{@model}} @header={{PH}} />
+      <PH.Actions>
+        <Workers::Worker::Actions
+          @model={{@model}}
+          @delete={{this.workers.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Workers::Worker::Nav />
+  </page.navigation>
+
+  <page.body>
+    <Form::Worker
+      @model={{@model}}
+      @submit={{fn this.workers.save @model}}
+      @cancel={{fn this.workers.cancel @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

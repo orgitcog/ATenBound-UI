@@ -1,0 +1,2 @@
+pnpm compliance:licenses
+pnpm lint-staged

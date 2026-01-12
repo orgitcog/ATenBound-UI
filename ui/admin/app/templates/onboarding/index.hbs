@@ -1,0 +1,25 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Centered>
+  <Rose::Frame class='create-resources'>
+    <:header>
+      <Hds::Icon @name='boundary-color' @size='24' @isInline={{true}} />
+      <Hds::Text::Display @tag='h2' @size='400' @weight='bold'>{{t
+          'onboarding.add-target.titles.have-a-target'
+        }}</Hds::Text::Display>
+    </:header>
+    <:body>
+      <Hds::Text::Body @tag='p'>
+        {{t 'onboarding.add-target.descriptions.setup-first-target'}}
+      </Hds::Text::Body>
+      <Form::Onboarding
+        @model={{@model}}
+        @submit={{fn this.createResources @model}}
+        @cancel={{this.doLater}}
+      />
+    </:body>
+  </Rose::Frame>
+</Rose::Layout::Centered>

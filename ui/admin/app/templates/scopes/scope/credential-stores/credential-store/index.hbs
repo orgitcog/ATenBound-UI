@@ -1,0 +1,36 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <CredentialStores::CredentialStore::Header
+        @model={{@model}}
+        @header={{PH}}
+      />
+      <PH.Actions>
+        <CredentialStores::CredentialStore::Actions
+          @model={{@model}}
+          @delete={{fn this.credentialStores.delete @model}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <CredentialStores::CredentialStore::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body>
+    <Form::CredentialStore
+      @model={{@model}}
+      @submit={{fn this.credentialStores.save @model}}
+      @cancel={{fn this.credentialStores.cancel @model}}
+    />
+  </page.body>
+</Rose::Layout::Page>

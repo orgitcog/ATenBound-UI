@@ -1,0 +1,55 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.storage-bucket.title'}}
+        <DocLink @doc='storage-bucket' />
+      </PH.Title>
+      <PH.Generic>
+        <Hds::Copy::Snippet @textToCopy={{@model.id}} @color='secondary' />
+      </PH.Generic>
+      {{#if (can 'delete storage-bucket' @model)}}
+        <PH.Actions>
+          <Hds::Dropdown as |dd|>
+            <dd.ToggleButton @text={{t 'actions.manage'}} @color='secondary' />
+            <dd.Interactive
+              @color='critical'
+              {{on 'click' (fn this.storageBuckets.delete @model)}}
+            >{{t 'actions.delete'}}</dd.Interactive>
+          </Hds::Dropdown>
+        </PH.Actions>
+      {{/if}}
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Rose::Nav::Tabs as |nav|>
+      <nav.link @route='scopes.scope.storage-buckets.storage-bucket.index'>
+        {{t 'titles.details'}}
+      </nav.link>
+    </Rose::Nav::Tabs>
+  </page.navigation>
+
+  <page.body>
+    <Form::StorageBucket
+      @model={{@model}}
+      @submit={{fn this.storageBuckets.save @model}}
+      @cancel={{fn this.storageBuckets.cancel @model}}
+      @scopes={{this.scopes}}
+      @changeCredentialType={{fn
+        this.storageBuckets.changeCredentialType
+        @model
+      }}
+      @changePluginType={{this.storageBuckets.changePluginType}}
+    />
+  </page.body>
+</Rose::Layout::Page>

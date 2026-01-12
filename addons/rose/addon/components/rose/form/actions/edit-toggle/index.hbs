@@ -1,0 +1,17 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Hds::ButtonSet class='rose-form-actions' ...attributes>
+  {{#if (has-block 'edit')}}
+    {{yield to='edit'}}
+  {{else}}
+    <Hds::Button
+      aria-description={{@ariaDescriptionEdit}}
+      @text={{@enableEditText}}
+      @color='secondary'
+      {{on 'click' @enableEdit}}
+    />
+  {{/if}}
+</Hds::ButtonSet>

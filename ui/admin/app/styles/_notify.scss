@@ -1,0 +1,88 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+// This file is essentially a rip of the default ember notify styles with some minor tweaks for positioning.
+@-webkit-keyframes ember-notify-show {
+  from {
+    right: -310px;
+  }
+
+  to {
+    right: 0;
+  }
+}
+@keyframes ember-notify-show {
+  from {
+    right: -310px;
+  }
+
+  to {
+    right: 0;
+  }
+}
+@-webkit-keyframes ember-notify-hide {
+  from {
+    right: 0;
+  }
+
+  to {
+    right: -310px;
+  }
+}
+@keyframes ember-notify-hide {
+  from {
+    right: 0;
+  }
+
+  to {
+    right: -310px;
+  }
+}
+
+.ember-notify-cn {
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  z-index: 5000;
+  margin-bottom: 16px;
+}
+
+.ember-notify {
+  box-sizing: border-box;
+  display: block;
+  margin: 16px 24px;
+  position: relative;
+  width: 360px;
+}
+
+.ember-notify-show {
+  -webkit-animation-duration: 500ms;
+  -webkit-animation-name: ember-notify-show;
+  -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation-duration: 500ms;
+  animation-name: ember-notify-show;
+  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ember-notify-hide {
+  -webkit-animation-duration: 250ms;
+  -webkit-animation-name: ember-notify-hide;
+  -webkit-animation-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  animation-duration: 250ms;
+  animation-name: ember-notify-hide;
+  animation-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+
+  &:hover {
+    -moz-animation-play-state: paused;
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+  }
+}
+
+@media only screen and (width <= 680px) {
+  .ember-notify {
+    width: 100%;
+  }
+}

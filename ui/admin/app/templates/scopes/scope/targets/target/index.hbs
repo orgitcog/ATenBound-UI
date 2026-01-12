@@ -1,0 +1,167 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <Targets::Target::Header @model={{@model}} @header={{PH}} />
+      <PH.Actions>
+        <Targets::Target::Actions
+          @model={{@model}}
+          @delete={{this.targets.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Targets::Target::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body>
+    <Rose::Layout::BodyContent as |bc|>
+      <bc.Body>
+        <Form::Target
+          @model={{@model}}
+          @submit={{fn this.targets.saveWithAddress @model}}
+          @cancel={{fn this.targets.cancel @model}}
+        />
+      </bc.Body>
+      <bc.Sidebar>
+        {{#if @model.aliases}}
+          <div class='target-sidebar-aliases'>
+            <Hds::Text::Display @tag='h2' class='remove-margin'>
+              {{t 'resources.alias.title_plural'}}
+            </Hds::Text::Display>
+            <Hds::Text::Body @tag='p' @color='faint' class='p'>
+              {{t 'resources.alias.form.sidebar.help'}}
+            </Hds::Text::Body>
+            {{#each this.aliases as |alias|}}
+              <LinkListPanel as |P|>
+                <P.Item
+                  @icon='at-sign'
+                  @color='boundary'
+                  @text={{alias.value}}
+                  @route='scopes.scope.targets.target.manage-alias'
+                  @model={{alias.id}}
+                />
+              </LinkListPanel>
+            {{/each}}
+
+            {{#if this.showFlyoutBtn}}
+              <Hds::Button
+                data-test-aliases-view-more
+                @text={{t 'resources.target.actions.view-more-aliases'}}
+                @color='secondary'
+                {{on 'click' this.toggleFlyout}}
+              />
+            {{/if}}
+            {{#if this.showFlyOutComponent}}
+              <Hds::Flyout
+                data-test-aliases-flyout
+                @onClose={{this.toggleFlyout}}
+                as |M|
+              >
+                <M.Header>
+                  {{t
+                    'resources.target.titles.aliases-flyout'
+                    targetDisplayName=@model.displayName
+                  }}
+                </M.Header>
+
+                <M.Body>
+                  {{#each this.remainingAliases as |alias|}}
+                    <LinkListPanel as |P|>
+                      <P.Item
+                        @icon='at-sign'
+                        @color='boundary'
+                        @text={{alias.value}}
+                        @route='scopes.scope.targets.target.manage-alias'
+                        @model={{alias.id}}
+                      />
+                    </LinkListPanel>
+                  {{/each}}
+                </M.Body>
+              </Hds::Flyout>
+            {{/if}}
+          </div>
+        {{else}}
+          {{#if (can 'create model' this.globalScope collection='aliases')}}
+            <div class='target-sidebar-aliases'>
+              <Hds::Text::Display @tag='h2' class='remove-margin'>
+                {{t 'resources.alias.title_plural'}}
+              </Hds::Text::Display>
+              <Hds::Text::Body @tag='p' @color='faint' class='p'>
+                {{t 'resources.alias.form.sidebar.help'}}
+              </Hds::Text::Body>
+
+              <Hds::Button
+                @icon='plus'
+                @text={{t 'resources.target.actions.add-an-alias'}}
+                @color='secondary'
+                @route='scopes.scope.targets.target.create-alias'
+              />
+            </div>
+          {{/if}}
+        {{/if}}
+        <div class='target-sidebar'>
+          {{#if (and @model.isSSH (feature-flag 'ssh-session-recording'))}}
+            <Hds::Text::Display @tag='h2' class='remove-margin'>
+              {{t 'resources.target.form.sidebar.label'}}
+            </Hds::Text::Display>
+            <Hds::Text::Body @tag='p' @color='faint' class='p'>
+              {{t 'resources.target.form.sidebar.help'}}
+            </Hds::Text::Body>
+            {{#if @model.enable_session_recording}}
+              {{#if this.storageBucket.isUnknown}}
+                <LinkListPanel as |P|>
+                  <P.Item @color='boundary' @text={{this.storageBucket.name}}>
+                    {{t 'resources.storage-bucket.plugin-types.unknown'}}
+                  </P.Item>
+                </LinkListPanel>
+              {{else}}
+                <LinkListPanel as |P|>
+                  <P.Item
+                    @icon='cloud-upload'
+                    @color='boundary'
+                    @text={{this.storageBucket.name}}
+                    @route='scopes.scope.storage-buckets.storage-bucket'
+                    @model={{@model.storage_bucket_id}}
+                  >
+                    <Hds::Badge
+                      @text={{t
+                        (concat
+                          'resources.storage-bucket.plugin-types.'
+                          this.storageBucket.pluginName
+                        )
+                      }}
+                      @icon={{this.storageBucket.icon}}
+                    />
+                  </P.Item>
+                </LinkListPanel>
+                <Hds::Link::Standalone
+                  @icon='arrow-right'
+                  @iconPosition='trailing'
+                  @text={{t 'resources.target.form.sidebar.link'}}
+                  @route='scopes.scope.targets.target.enable-session-recording'
+                />
+              {{/if}}
+            {{else}}
+              <Hds::Button
+                @text={{t 'resources.target.actions.enable-recording'}}
+                @color='secondary'
+                @route='scopes.scope.targets.target.enable-session-recording'
+              />
+            {{/if}}
+          {{/if}}
+        </div>
+      </bc.Sidebar>
+    </Rose::Layout::BodyContent>
+  </page.body>
+</Rose::Layout::Page>

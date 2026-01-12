@@ -1,0 +1,19 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<div class='toolbar-refresher'>
+  {{#if (has-block)}}
+    {{yield}}
+  {{else}}
+    {{#if this.lastRefreshed}}
+      <Hds::Text::Body @tag='p' @color='faint'>
+        {{relative-datetime-live this.lastRefreshed}}
+      </Hds::Text::Body>
+    {{/if}}
+  {{/if}}
+  <LoadingButton @onClick={{this.onClick}}>
+    {{t 'actions.refresh'}}
+  </LoadingButton>
+</div>

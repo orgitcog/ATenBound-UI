@@ -1,0 +1,36 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'titles.new')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.role.titles.new'}}
+  @route='scopes.scope.roles.new'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.role.titles.new'}}
+        <DocLink @doc='role' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.role.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+    <Form::Role
+      @model={{@model}}
+      @submit={{fn this.roles.save @model}}
+      @cancel={{fn this.roles.cancel @model}}
+    />
+  </page.body>
+</Rose::Layout::Page>

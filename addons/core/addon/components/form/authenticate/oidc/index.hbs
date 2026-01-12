@@ -1,0 +1,22 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Form
+  class='full-width'
+  @onSubmit={{@onSubmit}}
+  @disabled={{@disabled}}
+  as |form|
+>
+  <form.actions>
+    <:actions>
+      <Hds::Button
+        @text={{t 'actions.authenticate'}}
+        @isFullWidth={{true}}
+        disabled={{form.disabled}}
+        type='submit'
+      />
+    </:actions>
+  </form.actions>
+</Rose::Form>

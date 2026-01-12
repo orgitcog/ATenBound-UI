@@ -1,0 +1,29 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.target.enable-session-recording.messages.add.title'}}
+        <DocLink @doc='target.enable-session-recording' />
+      </PH.Title>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+    <Form::Target::EnableSessionRecording
+      @model={{@model}}
+      @storageBucketList={{this.storageBucketList}}
+      @submit={{fn this.targets.save @model}}
+      @cancel={{fn this.cancel @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

@@ -1,0 +1,41 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.policy.title'}}
+        <DocLink @doc='storage-policy' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.policy.description'}}
+      </PH.Description>
+      <PH.Generic>
+        <Hds::Copy::Snippet @color='secondary' @textToCopy={{@model.id}} />
+      </PH.Generic>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Rose::Nav::Tabs as |nav|>
+      <nav.link @route='scopes.scope.policies.policy.index'>
+        {{t 'titles.details'}}
+      </nav.link>
+    </Rose::Nav::Tabs>
+  </page.navigation>
+
+  <page.body>
+    <Form::Policy
+      @model={{@model}}
+      @submit={{fn this.policies.save @model}}
+      @cancel={{fn this.policies.cancel @model}}
+    />
+  </page.body>
+</Rose::Layout::Page>

@@ -1,0 +1,6 @@
+# e2e test output
+admin/artifacts
+desktop/artifacts
+playwright-report
+
+.auth

@@ -1,0 +1,60 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title
+  (t
+    'resources.role.scope.messages.manage-org-projects.title'
+    orgDisplayName=@model.orgScope.displayName
+  )
+}}
+{{#if @model.role.scope.isGlobal}}
+  <Breadcrumbs::Item
+    @text={{t 'resources.role.scope.messages.manage-custom-scopes.title'}}
+    @route='scopes.scope.roles.role.manage-scopes.manage-custom-scopes'
+  />
+{{/if}}
+<Breadcrumbs::Item
+  @text={{t
+    'resources.role.scope.messages.manage-org-projects.title'
+    orgDisplayName=@model.orgScope.displayName
+  }}
+  @route='scopes.scope.roles.role.manage-scopes.manage-org-projects'
+  @model={{@model}}
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t
+          'resources.role.scope.messages.manage-org-projects.title'
+          orgDisplayName=@model.orgScope.displayName
+        }}
+        <DocLink @doc='role.add-grant-scopes' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.role.scope.messages.manage-org-projects.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='search-filtering'>
+    <Form::Role::ManageOrgProjects
+      @model={{@model}}
+      @search={{this.search}}
+      @page={{this.page}}
+      @pageSize={{this.pageSize}}
+      @selectedItems={{this.selectedItems}}
+      @handleSearchInput={{this.handleSearchInput}}
+      @submit={{fn this.setGrantScopes @model.role}}
+      @cancel={{fn this.cancel @model.role}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

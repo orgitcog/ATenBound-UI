@@ -1,0 +1,30 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: BUSL-1.1
+
+addons:
+  - changed-files:
+    - any-glob-to-any-file: "addons/**/*"
+
+api-addon:
+  - changed-files:
+    - any-glob-to-any-file: "addons/api/**/*"
+
+auth-addon:
+  - changed-files:
+    - any-glob-to-any-file: "addons/auth/**/*"
+
+styles-addon:
+  - changed-files:
+    - any-glob-to-any-file: "addons/rose/**/*"
+
+ui:
+  - changed-files:
+    - any-glob-to-any-file: "ui/**/*"
+
+admin:
+  - changed-files:
+    - any-glob-to-any-file: "ui/admin/**/*"
+
+desktop:
+  - changed-files:
+    - any-glob-to-any-file: "ui/desktop/**/*"

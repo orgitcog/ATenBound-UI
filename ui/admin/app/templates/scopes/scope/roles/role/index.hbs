@@ -1,0 +1,32 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <Roles::Role::Header @model={{@model}} @header={{PH}} />
+      <PH.Actions>
+        <Roles::Role::Actions @model={{@model}} @delete={{this.roles.delete}} />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Roles::Role::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body>
+    <Form::Role
+      @model={{@model}}
+      @submit={{fn this.roles.save @model}}
+      @cancel={{fn this.roles.cancel @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

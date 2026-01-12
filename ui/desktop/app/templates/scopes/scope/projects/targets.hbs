@@ -1,0 +1,24 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.target.title_plural')}}
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Title>
+        {{t 'resources.target.title_plural'}}
+        <DocLink @doc='targets' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.target.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='search-filtering'>
+    {{outlet}}
+  </page.body>
+</Rose::Layout::Page>

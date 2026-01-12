@@ -1,0 +1,26 @@
+# compiled output
+/dist/
+/declarations/
+
+# dependencies
+/node_modules/
+
+# misc
+/.env*
+/.pnp*
+/.eslintcache
+/coverage/
+/testem.log
+
+# Vagrant
+.vagrant/
+
+# ember-try
+/.node_modules.ember-try/
+/package.json.ember-try
+
+# broccoli-debug
+/DEBUG/
+
+# a11y audit
+/ember-a11y-report/

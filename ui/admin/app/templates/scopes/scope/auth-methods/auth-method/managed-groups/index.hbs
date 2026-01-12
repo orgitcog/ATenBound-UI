@@ -1,0 +1,134 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <AuthMethods::AuthMethod::Header
+        @model={{@model.authMethod}}
+        @header={{PH}}
+      />
+      <PH.Actions>
+        <AuthMethods::AuthMethod::Actions
+          @model={{@model.authMethod}}
+          @changeState={{this.authMethods.changeState}}
+          @removeAsPrimary={{this.authMethods.removeAsPrimary}}
+          @makePrimary={{this.authMethods.makePrimary}}
+          @delete={{this.authMethods.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <AuthMethods::AuthMethod::Nav @model={{@model.authMethod}} />
+  </page.navigation>
+
+  <page.body>
+    {{#if @model.managedGroups}}
+      {{#if (get @model.managedGroups '0.isOIDC')}}
+        <Hds::Table
+          @model={{@model.managedGroups}}
+          @columns={{array
+            (hash label=(t 'form.name.label'))
+            (hash label=(t 'form.description.label'))
+            (hash label=(t 'form.type.label'))
+            (hash label=(t 'form.id.label'))
+          }}
+          @valign='middle'
+        >
+          <:body as |B|>
+            <B.Tr>
+              <B.Td>
+                {{#if (can 'read model' B.data)}}
+                  <LinkTo
+                    @route='scopes.scope.auth-methods.auth-method.managed-groups.managed-group'
+                    @model={{B.data.id}}
+                  >
+                    {{B.data.displayName}}
+                  </LinkTo>
+                {{else}}
+                  {{B.data.displayName}}
+                {{/if}}
+              </B.Td>
+              <B.Td>{{B.data.description}}</B.Td>
+              <B.Td><Hds::Badge @text={{B.data.type}} /></B.Td>
+              <B.Td>
+                <Hds::Copy::Snippet
+                  @textToCopy={{B.data.id}}
+                  @color='secondary'
+                />
+              </B.Td>
+            </B.Tr>
+          </:body>
+        </Hds::Table>
+      {{else}}
+        <Hds::Table
+          @model={{@model.managedGroups}}
+          @columns={{array
+            (hash label=(t 'form.name.label'))
+            (hash label=(t 'form.description.label'))
+            (hash label=(t 'form.type.label'))
+            (hash label=(t 'form.id.label'))
+            (hash label=(t 'resources.managed-group.form.group_names.label'))
+          }}
+          @valign='middle'
+        >
+          <:body as |B|>
+            <B.Tr>
+              <B.Td>
+                {{#if (can 'read model' B.data)}}
+                  <LinkTo
+                    @route='scopes.scope.auth-methods.auth-method.managed-groups.managed-group'
+                    @model={{B.data.id}}
+                  >
+                    {{B.data.displayName}}
+                  </LinkTo>
+                {{else}}
+                  {{B.data.displayName}}
+                {{/if}}
+              </B.Td>
+              <B.Td>{{B.data.description}}</B.Td>
+              <B.Td><Hds::Badge @text={{B.data.type}} /></B.Td>
+              <B.Td>
+                <Hds::Copy::Snippet
+                  @textToCopy={{B.data.id}}
+                  @color='secondary'
+                />
+              </B.Td>
+              <B.Td>
+                {{truncate-list 'actions.more' B.data.group_names 3}}
+              </B.Td>
+            </B.Tr>
+          </:body>
+        </Hds::Table>
+      {{/if}}
+    {{else}}
+      <Rose::Layout::Centered>
+        <Hds::ApplicationState as |A|>
+          <A.Header
+            @title={{t 'resources.managed-group.messages.welcome.title'}}
+          />
+          <A.Body @text={{this.messageDescription}} />
+          {{#if
+            (can 'create model' this.authMethod collection='managed-groups')
+          }}
+            <A.Footer as |F|>
+              <F.LinkStandalone
+                @icon='plus-circle'
+                @text={{t 'resources.managed-group.actions.create'}}
+                @route='scopes.scope.auth-methods.auth-method.managed-groups.new'
+              />
+            </A.Footer>
+          {{/if}}
+        </Hds::ApplicationState>
+      </Rose::Layout::Centered>
+    {{/if}}
+  </page.body>
+
+</Rose::Layout::Page>

@@ -1,0 +1,21 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Hds::Card::Container @level='mid' @hasBorder={{true}}>
+  <ul>
+    {{yield
+      (hash
+        Item=(component
+          'link-list-panel/item'
+          icon=@icon
+          color=@color
+          text=@text
+          route=@route
+          model=@model
+        )
+      )
+    }}
+  </ul>
+</Hds::Card::Container>

@@ -1,0 +1,16 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{#unless @model}}
+  <Rose::Layout::Centered>
+    <Hds::ApplicationState as |A|>
+      <A.Header
+        @title={{t 'resources.auth-method.messages.none.title'}}
+        @icon='alert-circle'
+      />
+      <A.Body @text={{t 'resources.auth-method.messages.none.description'}} />
+    </Hds::ApplicationState>
+  </Rose::Layout::Centered>
+{{/unless}}

@@ -1,0 +1,16 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<div ...attributes class='rose-layout-sidebar'>
+  {{yield
+    (hash
+      body=(component 'rose/anonymous' class='rose-layout-sidebar-body')
+      sidebar=(component
+        'rose/anonymous' tagName='aside' class='rose-layout-sidebar-sidebar'
+      )
+      footer=(component 'rose/anonymous' class='rose-layout-sidebar-footer')
+    )
+  }}
+</div>

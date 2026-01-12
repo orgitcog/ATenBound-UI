@@ -1,0 +1,74 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.alias.title'}}
+        <DocLink @doc='alias' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.alias.description'}}
+      </PH.Description>
+      <PH.Actions>
+        {{#let
+          (hash
+            canUpdate=(can 'update model' @model)
+            canDelete=(can 'delete model' @model)
+          )
+          as |perms|
+        }}
+          {{#if (or perms.canUpdate perms.canDelete)}}
+            <Hds::Dropdown data-test-manage-alias as |dd|>
+              <dd.ToggleButton
+                @text={{t 'actions.manage'}}
+                @color='secondary'
+              />
+              {{#if (and perms.canUpdate @model.destination_id)}}
+                <dd.Interactive
+                  @color='action'
+                  {{on 'click' (fn this.aliases.clearAlias @model)}}
+                >
+                  {{t 'actions.clear'}}
+                </dd.Interactive>
+              {{/if}}
+              {{#if perms.canDelete}}
+                <dd.Interactive
+                  @color='critical'
+                  {{on 'click' (fn this.aliases.deleteAlias @model)}}
+                >
+                  {{t 'actions.delete'}}
+                </dd.Interactive>
+              {{/if}}
+            </Hds::Dropdown>
+          {{/if}}
+        {{/let}}
+      </PH.Actions>
+      <PH.Generic>
+        <Hds::Copy::Snippet @color='secondary' @textToCopy={{@model.id}} />
+      </PH.Generic>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Rose::Nav::Tabs as |nav|>
+      <nav.link @route='scopes.scope.aliases.alias.index'>
+        {{t 'titles.details'}}
+      </nav.link>
+    </Rose::Nav::Tabs>
+  </page.navigation>
+
+  <page.body>
+    <Form::Alias
+      @model={{@model}}
+      @submit={{fn this.aliases.save @model}}
+      @cancel={{fn this.aliases.cancel @model}}
+    />
+  </page.body>
+</Rose::Layout::Page>

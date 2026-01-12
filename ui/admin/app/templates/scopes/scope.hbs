@@ -1,0 +1,248 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{#if @model.isOrg}}
+  {{page-title (t 'resources.org.title_plural')}}
+  {{page-title @model.displayName}}
+  <Breadcrumbs::Item
+    @text={{@model.displayName}}
+    @icon='org'
+    @route='scopes.scope.edit'
+    @model={{@model.id}}
+  />
+{{/if}}
+
+{{#if @model.isProject}}
+  {{page-title (t 'resources.org.title_plural')}}
+  {{page-title this.scope.org.displayName}}
+  {{page-title (t 'resources.project.title_plural')}}
+  {{page-title @model.displayName}}
+  <Breadcrumbs::Item
+    @text={{this.scope.org.displayName}}
+    @icon='org'
+    @route='scopes.scope.edit'
+    @model={{this.scope.org.id}}
+  />
+  <Breadcrumbs::Item
+    @text={{@model.displayName}}
+    @icon='grid'
+    @route='scopes.scope.edit'
+    @model={{@model.id}}
+  />
+{{/if}}
+
+<Hds::SideNav::Portal as |Nav|>
+  {{#if @model.isGlobal}}
+    <Nav.Title>{{t 'titles.scope-level' scope=(t 'titles.global')}}</Nav.Title>
+
+    <Nav.Link
+      @icon='org'
+      @text={{t 'resources.org.title_plural'}}
+      @route='scopes.scope.scopes'
+    />
+
+    {{#if (can 'navigate scope' @model collection='session-recordings')}}
+      <Nav.Link
+        @icon='film'
+        @text={{t 'resources.session-recording.title_plural'}}
+        @route='scopes.scope.session-recordings'
+      />
+    {{/if}}
+
+    {{#if (can 'navigate scope' @model collection='storage-buckets')}}
+      <Nav.Link
+        @icon='cloud-upload'
+        @text={{t 'resources.storage-bucket.title_plural'}}
+        @route='scopes.scope.storage-buckets'
+      />
+    {{/if}}
+
+    {{#if (can 'navigate scope' @model collection='policies')}}
+      <Nav.Link
+        @icon='hourglass'
+        @text={{t 'resources.policy.title_plural'}}
+        @route='scopes.scope.policies'
+      />
+    {{/if}}
+
+    {{#if (can 'navigate scope' @model collection='aliases')}}
+      <Nav.Link
+        @icon='at-sign'
+        @text={{t 'resources.alias.title_plural'}}
+        @route='scopes.scope.aliases'
+      />
+    {{/if}}
+
+    {{#if
+      (and
+        (can 'navigate worker' @model collection='workers')
+        (feature-flag 'byow')
+      )
+    }}
+      <Nav.Link
+        @icon='cpu'
+        @text={{t 'titles.workers'}}
+        @route='scopes.scope.workers'
+      />
+    {{/if}}
+
+    <Nav.Title>{{t 'titles.scope-iam' scope=(t 'titles.global')}}</Nav.Title>
+  {{/if}}
+
+  {{#if @model.isOrg}}
+    {{#if this.session.data.authenticated.isGlobal}}
+      <Nav.BackLink
+        @text={{t 'titles.back-link' scope=(t 'titles.global')}}
+        @route='scopes.scope.scopes'
+        @model='global'
+      />
+    {{/if}}
+
+    <Nav.Title>{{t
+        'titles.scope-level'
+        scope=(t 'resources.org.title')
+      }}</Nav.Title>
+
+    <Nav.Link
+      @icon='grid'
+      @text={{t 'resources.project.title_plural'}}
+      @route='scopes.scope.scopes'
+    />
+
+    {{#if (can 'navigate scope' @model collection='policies')}}
+      <Nav.Link
+        @icon='hourglass'
+        @text={{t 'resources.policy.title_plural'}}
+        @route='scopes.scope.policies'
+      />
+    {{/if}}
+
+    <Nav.Title>{{t
+        'titles.scope-iam'
+        scope=(t 'resources.org.title')
+      }}</Nav.Title>
+  {{/if}}
+
+  {{#if @model.isProject}}
+    <Nav.BackLink
+      @text={{t 'titles.back-link' scope=this.scope.org.displayName}}
+      @route='scopes.scope.scopes'
+      @model={{@model.scopeID}}
+    />
+
+    <Nav.Title>{{t 'titles.project-actions'}}</Nav.Title>
+
+    {{#if (can 'navigate model' @model collection='targets')}}
+      <Nav.Link
+        @icon='target'
+        @text={{t 'resources.target.title_plural'}}
+        @route='scopes.scope.targets'
+      />
+    {{/if}}
+
+    {{#if (can 'navigate model' @model collection='host-catalogs')}}
+      <Nav.Link
+        @icon='collections'
+        @text={{t 'resources.host-catalog.title_plural'}}
+        @route='scopes.scope.host-catalogs'
+      />
+    {{/if}}
+
+    {{#if (can 'navigate model' @model collection='credential-stores')}}
+      <Nav.Link
+        @icon='key'
+        @text={{t 'resources.credential-store.title_plural'}}
+        @route='scopes.scope.credential-stores'
+      />
+    {{/if}}
+
+    {{#if (can 'navigate model' @model collection='sessions')}}
+      <Nav.Link
+        @icon='entry-point'
+        @text={{t 'resources.session.title_plural'}}
+        @route='scopes.scope.sessions'
+      />
+    {{/if}}
+
+    <Nav.Title>{{t
+        'titles.scope-iam'
+        scope=(t 'resources.project.title')
+      }}</Nav.Title>
+  {{/if}}
+
+  {{! Users are available only for org/global scopes }}
+  {{#unless @model.isProject}}
+    {{#if (can 'navigate model' @model collection='users')}}
+      <Nav.Link
+        @icon='users'
+        @text={{t 'resources.user.title_plural'}}
+        @route='scopes.scope.users'
+      />
+    {{/if}}
+  {{/unless}}
+
+  {{! Groups and roles are available for all scopes }}
+  {{#if (can 'navigate model' @model collection='groups')}}
+    <Nav.Link
+      @icon='folder-users'
+      @text={{t 'resources.group.title_plural'}}
+      @route='scopes.scope.groups'
+    />
+  {{/if}}
+  {{#if (can 'navigate model' @model collection='roles')}}
+    <Nav.Link
+      @icon='identity-user'
+      @text={{t 'resources.role.title_plural'}}
+      @route='scopes.scope.roles'
+    />
+  {{/if}}
+
+  {{! Auth methods are available only for org/global scopes }}
+  {{#unless @model.isProject}}
+    {{#if (can 'navigate model' @model collection='auth-methods')}}
+      <Nav.Link
+        @icon='lock'
+        @text={{t 'resources.auth-method.title_plural'}}
+        @route='scopes.scope.auth-methods'
+      />
+    {{/if}}
+  {{/unless}}
+
+  {{#if (and @model.isGlobal (feature-flag 'ssh-session-recording'))}}
+    {{#if this.session.data.authenticated.isGlobal}}
+      <Nav.Title>{{t 'titles.settings'}}</Nav.Title>
+
+      <Nav.Link
+        @icon='settings'
+        @text={{t 'resources.global.messages.settings.title'}}
+        @route='scopes.scope.edit'
+      />
+    {{/if}}
+  {{/if}}
+
+  {{#if @model.isOrg}}
+    {{#if this.session.data.authenticated.isGlobal}}
+      <Nav.Title>{{t 'titles.settings'}}</Nav.Title>
+
+      <Nav.Link
+        @icon='settings'
+        @text={{t 'resources.org.messages.settings.title'}}
+        @route='scopes.scope.edit'
+      />
+    {{/if}}
+  {{/if}}
+
+  {{#if @model.isProject}}
+    <Nav.Title>{{t 'titles.settings'}}</Nav.Title>
+
+    <Nav.Link
+      @icon='settings'
+      @text={{t 'resources.project.messages.settings.title'}}
+      @route='scopes.scope.edit'
+    />
+  {{/if}}
+</Hds::SideNav::Portal>
+
+{{outlet}}

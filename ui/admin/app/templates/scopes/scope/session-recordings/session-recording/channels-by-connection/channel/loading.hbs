@@ -1,0 +1,14 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<SessionRecording::Player
+  @route='scopes.scope.session-recordings.session-recording'
+  @model={{@model.sessionRecording.id}}
+>
+  <div class='session-recording-player-loading'>
+    <Hds::Icon @name='loading' @size='24' @isInline={{true}} />
+    <span>{{t 'resources.session-recording.channel.player.loading'}}</span>
+  </div>
+</SessionRecording::Player>

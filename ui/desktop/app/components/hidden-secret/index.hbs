@@ -1,0 +1,31 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<div class='hidden-secret'>
+  <Hds::Button
+    @text={{t 'actions.toggle-secret'}}
+    @icon={{if this.isHidden 'eye' 'eye-off'}}
+    @isIconOnly={{true}}
+    @color='secondary'
+    {{on 'click' this.toggleSecretVisibility}}
+  />
+
+  <div class='secret-content'>
+    {{#if this.isHidden}}
+      <Hds::Text::Code
+        @tag='pre'
+        @size='300'
+      >{{this.displaySecretValue}}</Hds::Text::Code>
+    {{else}}
+      <Hds::Text::Body @color='disabled'>{{this.textMask}}</Hds::Text::Body>
+    {{/if}}
+  </div>
+
+  <Hds::Copy::Button
+    @text={{t 'actions.copy-to-clipboard'}}
+    @isIconOnly={{true}}
+    @textToCopy={{this.displaySecretValue}}
+  />
+</div>

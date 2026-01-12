@@ -1,0 +1,19 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Toolbar as |toolbar|>
+  <Hds::Button @icon='x' @isInline={{true}} @text='Clear something' />
+  <toolbar.primary>
+    <Rose::Form>
+      <Hds::Button@icon='x' @isInline={{true}} @text='Clear something' />
+      <Hds::Button @icon='x' @isInline={{true}} @text='Clear something' />
+    </Rose::Form>
+  </toolbar.primary>
+  <toolbar.secondary>
+    <Rose::Form>
+      <Hds::Button @icon='x' @isInline={{true}} @text='Refresh' />
+    </Rose::Form>
+  </toolbar.secondary>
+</Rose::Toolbar>

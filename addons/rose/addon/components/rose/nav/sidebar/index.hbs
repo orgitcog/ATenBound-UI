@@ -1,0 +1,24 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<nav
+  ...attributes
+  class='rose-nav-sidebar'
+  id={{this.id}}
+  title={{@title}}
+  aria-labelledby={{if @title (concat 'title-' this.id)}}
+>
+
+  {{#if @title}}
+    {{! Updated span however this is hidden by default in the desktop,
+    once side nav refactor is done this will ultimately be removed }}
+    <Hds::Text::Body class='rose-nav-title' id='title-{{this.id}}'>
+      {{@title}}
+    </Hds::Text::Body>
+  {{/if}}
+
+  {{yield (hash link=(component 'rose/nav/link'))}}
+
+</nav>

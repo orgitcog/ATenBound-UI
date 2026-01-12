@@ -1,0 +1,12 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<div class='branded-card'>
+  <Hds::Text::Display @tag='h1' @size='500'>{{@title}}</Hds::Text::Display>
+  <Hds::Text::Body @tag='p' @size='300' class='branded-card-description'>
+    {{@description}}
+  </Hds::Text::Body>
+  {{yield}}
+</div>

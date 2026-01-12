@@ -1,0 +1,108 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: BUSL-1.1
+ */
+
+@use 'rose/app/styles/rose/variables/sizing' as sizing;
+@use 'sass:meta';
+
+.filters-applied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  .filter-tag {
+    max-width: 200px;
+
+    .hds-tag__text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Search & Filtering
+.search-filtering {
+  .hds-application-state {
+    margin-top: 3rem;
+  }
+
+  > div,
+  table {
+    margin-bottom: 1rem;
+  }
+
+  .hds-segmented-group {
+    .hds-dropdown-toggle-button__text {
+      white-space: nowrap;
+    }
+  }
+
+  .search-filtering-toolbar {
+    display: flex;
+
+    > :last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+// Flyout with table
+.flyout-with-table {
+  .copyable-content a,
+  button {
+    color: var(--token-color-foreground-primary);
+  }
+}
+
+.toolbar-refresher {
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  gap: 1rem;
+
+  > .hds-text {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+// Utility classes
+.container-inputs__margin-bottom {
+  input:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+$margin-directions: (
+  '': 'margin',
+  '-top': 'margin-top',
+  '-right': 'margin-right',
+  '-bottom': 'margin-bottom',
+  '-left': 'margin-left',
+  '-x': (
+    'margin-left',
+    'margin-right',
+  ),
+  '-y': (
+    'margin-top',
+    'margin-bottom',
+  ),
+);
+
+// Generate margin utility classes with sizes and directions
+@each $size-name, $size-coefficient in sizing.$size-coefficients {
+  @each $direction-suffix, $properties in $margin-directions {
+    .margin#{$direction-suffix}-#{$size-name} {
+      @if meta.type-of($properties) == 'list' {
+        @each $property in $properties {
+          #{$property}: #{sizing.rems($size-name)};
+        }
+      } @else {
+        #{$properties}: #{sizing.rems($size-name)};
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: BUSL-1.1
+
+add: Add
+cancel: Cancel
+edit: Edit
+delete: Delete
+remove: Remove
+discard: Discard
+disconnect: Disconnect
+save: Save
+submit: Submit
+manage: Manage
+confirm: Confirm
+done: Done
+ok: OK
+deny: Deny
+help: Need help
+next: Next
+back: Back
+view: View
+retry: Retry
+play: Play
+pause: Pause
+resume: Resume
+get-topic-help: Get help for this topic
+copy-to-clipboard: Copy to Clipboard
+copy-error-detail-to-clipboard: Copy error detail to clipboard
+authenticate: Sign In
+deauthenticate: Sign Out
+choose-org: Choose Scope
+choose-different-org: Choose a different scope
+add-host-set: Create Host Set
+add-host: Create Host
+add-principals: Add Principals
+add-members: Add Members
+add-hosts: Add Hosts
+set-password: Set Password
+change-password: Change Password
+edit-form: Edit Form
+change-cluster-url: Change Cluster URL
+change-state: Change State
+close: Close
+toggle-secret: Toggle secret visibility
+minimize: Minimize
+fullscreen: Fullscreen
+clear-all-filters: Clear all filters
+clear: Clear
+clear-filters: Clear filters
+learn-more: Learn more
+read-more: Read more
+refresh: Refresh
+remove-resources: Remove resources and save
+do-this-later: Do this later
+toggle-color-theme: Toggle Color Theme
+toggle-feature-edition: Toggle Feature Edition
+toggle-licensed-features: Toggle Licensed Features
+manage-db: Manage SQLite
+download-db: Download SQLite DB
+clear-db: Clear SQLite DB
+more: ', +{remainingItems} more'
+search: Search
+yes: Yes
+no: No
+narrow-results: Narrow results
+overflow-options: Overflow Options
+show-errors: Show Errors
+hide-errors: Hide Errors
+edit-worker-filter: Edit Worker Filter
+add-worker-filter: Add Worker Filter
+open: Open

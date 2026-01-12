@@ -1,0 +1,180 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.target.title_plural'}}
+        <DocLink @doc='target' />
+      </PH.Title>
+      {{#if @model.doTargetsExist}}
+        <PH.Description>
+          {{t 'resources.target.description'}}
+        </PH.Description>
+      {{/if}}
+      {{#if (can 'create model' this.scope collection='targets')}}
+        <PH.Actions>
+          {{#if @model.doTargetsExist}}
+            <Hds::Button
+              @route='scopes.scope.targets.new'
+              @text={{t 'resources.target.titles.new'}}
+              data-test-new-target-button
+            />
+          {{/if}}
+        </PH.Actions>
+      {{/if}}
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='search-filtering'>
+    {{#if @model.doTargetsExist}}
+      <Hds::SegmentedGroup as |S|>
+        <S.TextInput
+          @value={{this.search}}
+          @type='search'
+          placeholder={{t 'actions.search'}}
+          aria-label={{t 'actions.search'}}
+          {{on 'input' this.handleSearchInput}}
+        />
+        {{#if (can 'list model' this.scope collection='sessions')}}
+          <S.Generic>
+            <Dropdown
+              name='active-sessions'
+              @toggleText={{t 'resources.target.titles.active-sessions'}}
+              @itemOptions={{this.availableSessionOptions}}
+              @checkedItems={{this.availableSessions}}
+              @applyFilter={{fn this.applyFilter 'availableSessions'}}
+            />
+          </S.Generic>
+        {{/if}}
+        {{#if this.showTargetTypeOptions}}
+          <S.Generic>
+            <Dropdown
+              name='type'
+              @toggleText={{t 'form.type.label'}}
+              @itemOptions={{this.targetTypeOptions}}
+              @checkedItems={{this.types}}
+              @applyFilter={{fn this.applyFilter 'types'}}
+            />
+          </S.Generic>
+        {{/if}}
+      </Hds::SegmentedGroup>
+
+      <FilterTags @filters={{this.filters}} />
+
+      {{#if @model.targets}}
+        <Hds::Table
+          @valign='middle'
+          @onSort={{this.onSort}}
+          @sortBy={{this.sortAttribute}}
+          @sortOrder={{this.sortDirection}}
+        >
+          <:head as |H|>
+            <H.Tr>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'name'}}
+                @sortOrder={{if (eq 'name' H.sortBy) H.sortOrder}}
+              >{{t 'form.name.label'}}</H.ThSort>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'type'}}
+                @sortOrder={{if (eq 'type' H.sortBy) H.sortOrder}}
+              >{{t 'form.type.label'}}</H.ThSort>
+              <H.Th>{{t 'resources.target.titles.active-sessions'}}</H.Th>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'id'}}
+                @sortOrder={{if (eq 'id' H.sortBy) H.sortOrder}}
+              >{{t 'form.id.label'}}</H.ThSort>
+            </H.Tr>
+          </:head>
+          <:body as |B|>
+            {{#each this.targetsData as |data|}}
+              <B.Tr data-test-targets-table-row={{data.id}}>
+                <B.Td>
+                  {{#if (can 'read model' data)}}
+                    <LinkTo
+                      @route='scopes.scope.targets.target'
+                      @model={{data.id}}
+                    >
+                      {{data.displayName}}
+                    </LinkTo>
+                  {{else}}
+                    {{data.displayName}}
+                  {{/if}}
+                  <Hds::Text::Body @tag='p' class='p'>
+                    {{data.description}}
+                  </Hds::Text::Body>
+                </B.Td>
+                <B.Td>
+                  {{#if data.type}}
+                    <Hds::Badge
+                      @text={{t (concat 'resources.target.types.' data.type)}}
+                    />
+                  {{/if}}
+                </B.Td>
+                <B.Td>
+                  {{#if data.isActive}}
+                    <Hds::Link::Standalone
+                      @text={{t 'actions.yes'}}
+                      @route='scopes.scope.sessions.index'
+                      @query={{hash targets=(array data.id)}}
+                      @icon='info'
+                    />
+                  {{/if}}
+                </B.Td>
+                <B.Td>
+                  <Hds::Copy::Snippet
+                    @textToCopy={{data.id}}
+                    @color='secondary'
+                  />
+                </B.Td>
+              </B.Tr>
+            {{/each}}
+          </:body>
+        </Hds::Table>
+        <Rose::Pagination
+          @totalItems={{@model.totalItems}}
+          @currentPage={{this.page}}
+          @currentPageSize={{this.pageSize}}
+        />
+      {{else}}
+        <Hds::ApplicationState data-test-no-target-results as |A|>
+          <A.Header @title={{t 'titles.no-results-found'}} />
+          <A.Body
+            @text={{t
+              (if
+                this.search
+                'descriptions.no-search-results'
+                'descriptions.no-filter-results'
+              )
+              query=this.search
+              resource=(t 'resources.target.title_plural')
+            }}
+          />
+        </Hds::ApplicationState>
+      {{/if}}
+    {{else}}
+      <Hds::ApplicationState as |A|>
+        <A.Header @title={{t 'resources.target.messages.welcome.title'}} />
+        <A.Body @text={{this.messageDescription}} />
+        {{#if (can 'create model' this.scope collection='targets')}}
+          <A.Footer as |F|>
+            <F.LinkStandalone
+              @icon='plus-circle'
+              @text={{t 'titles.new'}}
+              @route='scopes.scope.targets.new'
+            />
+
+          </A.Footer>
+        {{/if}}
+      </Hds::ApplicationState>
+    {{/if}}
+  </page.body>
+
+</Rose::Layout::Page>

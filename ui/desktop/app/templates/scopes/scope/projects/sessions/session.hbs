@@ -1,0 +1,52 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title @model.displayName}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.IconTile @color='boundary' @icon='terminal' />
+      <PH.Title>
+        {{@model.displayName}}
+      </PH.Title>
+      <PH.Badges>
+        <Hds::Badge
+          @text={{time-remaining @model.expiration_time}}
+          @icon='loading'
+        />
+      </PH.Badges>
+      {{#if (or (can 'cancel session' @model) this.showOpenButton)}}
+        <PH.Actions>
+          {{#if (can 'cancel session' @model)}}
+            <Hds::Button
+              data-test-session-detail-cancel-button
+              @text={{t 'resources.session.actions.end'}}
+              @icon='x'
+              @color='secondary'
+              {{on 'click' (fn this.sessions.cancelSession @model)}}
+            />
+          {{/if}}
+          {{#if this.showOpenButton}}
+            <Hds::Button
+              data-test-session-detail-open-button
+              @text={{t 'actions.open'}}
+              @icon='external-link'
+              @iconPosition='trailing'
+              @color='primary'
+              {{on 'click' this.launchRdpClient}}
+            />
+          {{/if}}
+        </PH.Actions>
+      {{/if}}
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='details-screen-body'>
+    <Session::Tabs @model={{@model}} />
+  </page.body>
+
+</Rose::Layout::Page>

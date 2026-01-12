@@ -1,0 +1,56 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.credential-library.title'}}
+        <DocLink @doc='credential-library' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.credential-library.description'}}
+      </PH.Description>
+      {{#if (can 'delete model' @model)}}
+        <PH.Actions>
+          <Hds::Dropdown data-test-manage-credential-library-dropdown as |dd|>
+            <dd.ToggleButton @text={{t 'actions.manage'}} @color='secondary' />
+            <dd.Interactive
+              @color='critical'
+              {{on 'click' (fn this.credentialLibraries.delete @model)}}
+            >
+              {{t 'resources.credential-library.actions.delete'}}
+            </dd.Interactive>
+          </Hds::Dropdown>
+        </PH.Actions>
+      {{/if}}
+      <PH.Generic>
+        <Hds::Copy::Snippet @textToCopy={{@model.id}} @color='secondary' />
+      </PH.Generic>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Rose::Nav::Tabs as |nav|>
+      <nav.link
+        @route='scopes.scope.credential-stores.credential-store.credential-libraries.credential-library.index'
+      >
+        {{t 'titles.details'}}
+      </nav.link>
+    </Rose::Nav::Tabs>
+  </page.navigation>
+
+  <page.body>
+    <Form::CredentialLibrary
+      @model={{@model}}
+      @edit={{fn this.credentialLibraries.edit @model}}
+      @submit={{fn this.credentialLibraries.save @model}}
+      @cancel={{fn this.credentialLibraries.cancel @model}}
+    />
+  </page.body>
+</Rose::Layout::Page>

@@ -1,0 +1,119 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'resources.target.host-source.title_plural')}}
+<Breadcrumbs::Item
+  @text={{t 'resources.target.host-source.title_plural'}}
+  @route='scopes.scope.targets.target.host-sources'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <Targets::Target::Header @model={{@model}} @header={{PH}} />
+      <PH.Actions>
+        <Targets::Target::Actions
+          @model={{@model}}
+          @delete={{this.targets.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Targets::Target::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body>
+    {{#if @model.hostSets}}
+
+      <Hds::Table
+        @model={{@model.hostSets}}
+        @columns={{array
+          (hash label=(t 'form.name.label'))
+          (hash label=(t 'form.type.label'))
+          (hash label=(t 'form.id.label'))
+          (hash label=(t 'titles.actions'))
+        }}
+        @valign='middle'
+      >
+        <:body as |B|>
+          <B.Tr>
+            <B.Td>
+              {{#if (can 'read host-set' B.data.model)}}
+                <LinkTo
+                  @route='scopes.scope.host-catalogs.host-catalog.host-sets.host-set'
+                  @models={{array B.data.model.host_catalog_id B.data.model.id}}
+                >
+                  {{B.data.model.displayName}}
+                </LinkTo>
+              {{else}}
+                {{B.data.model.displayName}}
+              {{/if}}
+              <Hds::Text::Body @tag='p'>
+                {{B.data.description}}
+              </Hds::Text::Body>
+            </B.Td>
+            <B.Td>
+              <HostCatalogTypeBadge @model={{B.data.model}} />
+            </B.Td>
+            <B.Td>
+              <Hds::Copy::Snippet
+                @textToCopy={{B.data.model.id}}
+                @color='secondary'
+              />
+            </B.Td>
+            <B.Td>
+              {{#if (can 'removeHostSources target' @model)}}
+                <Hds::Dropdown as |dd|>
+                  <dd.ToggleIcon
+                    @icon='more-horizontal'
+                    @text={{t 'actions.manage'}}
+                    @hasChevron={{false}}
+                  />
+                  <dd.Interactive
+                    @color='critical'
+                    {{on
+                      'click'
+                      (fn this.targets.removeHostSource @model B.data.model)
+                    }}
+                  >{{t 'actions.remove'}}</dd.Interactive>
+                </Hds::Dropdown>
+              {{/if}}
+            </B.Td>
+          </B.Tr>
+        </:body>
+      </Hds::Table>
+
+    {{else}}
+
+      <Rose::Layout::Centered>
+        <Hds::ApplicationState as |A|>
+          <A.Header
+            @title={{t 'resources.target.host-source.messages.welcome.title'}}
+          />
+          <A.Body
+            @text={{t
+              'resources.target.host-source.messages.welcome.description'
+            }}
+          />
+          <A.Footer as |F|>
+            <F.LinkStandalone
+              @icon='plus-circle'
+              @text={{t 'resources.target.actions.add-host-sources'}}
+              @route='scopes.scope.targets.target.add-host-sources'
+            />
+          </A.Footer>
+        </Hds::ApplicationState>
+      </Rose::Layout::Centered>
+
+    {{/if}}
+  </page.body>
+
+</Rose::Layout::Page>

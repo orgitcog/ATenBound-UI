@@ -1,0 +1,42 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <AuthMethods::AuthMethod::ManagedGroups::ManagedGroup::Header
+        @model={{@model}}
+        @header={{PH}}
+      />
+      <PH.Actions>
+        <AuthMethods::AuthMethod::ManagedGroups::ManagedGroup::Actions
+          @model={{@model}}
+          @delete={{this.managedGroups.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <AuthMethods::AuthMethod::ManagedGroups::ManagedGroup::Nav
+      @model={{@model}}
+    />
+  </page.navigation>
+
+  <page.body>
+    <Form::ManagedGroup
+      @model={{@model}}
+      @edit={{fn this.managedGroups.edit @model}}
+      @submit={{fn this.managedGroups.save @model}}
+      @cancel={{fn this.managedGroups.cancel @model}}
+      @removeItemByIndex={{fn this.authMethods.removeItemByIndex @model}}
+      @addStringItem={{fn this.authMethods.addStringItem @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

@@ -1,0 +1,147 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'titles.workers')}}
+<Breadcrumbs::Item
+  @text={{t 'titles.workers'}}
+  @route='scopes.scope.targets.target.workers'
+/>
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <Targets::Target::Header @model={{@model}} @header={{PH}} />
+      <PH.Actions>
+        <Targets::Target::Actions
+          @model={{@model}}
+          @delete={{this.targets.delete}}
+        />
+      </PH.Actions>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.navigation>
+    <Targets::Target::Nav @model={{@model}} />
+  </page.navigation>
+
+  <page.body class='target-workers'>
+    <Hds::Text::Body @tag='p' @size='100' @color='faint'>
+      {{t 'resources.target.workers.description'}}
+    </Hds::Text::Body>
+    <WorkerDiagram
+      @egressWorkerFilterEnabled={{@model.egress_worker_filter}}
+      @ingressWorkerFilterEnabled={{@model.ingress_worker_filter}}
+    />
+    <Hds::Accordion as |A|>
+      {{#if (feature-flag 'worker-filter')}}
+        <A.Item
+          @containsInteractive={{true}}
+          @isOpen={{@model.ingress_worker_filter}}
+          data-test-target-ingress-workers-accordion-item
+        >
+          <:toggle>
+            <div class='accordion-item-toggle-content'>
+              <span>{{t
+                  'resources.target.workers.accordion-label.ingress-workers'
+                }}</span>
+              <Hds::Link::Standalone
+                @icon={{if @model.ingress_worker_filter 'edit' 'plus-circle'}}
+                @text={{t
+                  (if
+                    @model.ingress_worker_filter
+                    'actions.edit-worker-filter'
+                    'actions.add-worker-filter'
+                  )
+                }}
+                @route='scopes.scope.targets.target.edit-ingress-worker-filter'
+              />
+            </div>
+          </:toggle>
+          <:content>
+            {{#if @model.ingress_worker_filter}}
+              <Hds::CodeBlock
+                @maxHeight='300px'
+                @language='bash'
+                @hasCopyButton={{true}}
+                @value={{@model.ingress_worker_filter}}
+                as |CB|
+              >
+                <CB.Title>{{t 'form.worker_filter.label'}}</CB.Title>
+                <CB.Description>{{t
+                    'resources.target.workers.worker-filter.description'
+                  }}</CB.Description>
+              </Hds::CodeBlock>
+            {{else}}
+              <Hds::ApplicationState as |A|>
+                <A.Header @title={{t 'titles.no-worker-filter'}} />
+                <A.Body
+                  @text={{t
+                    'resources.target.workers.messages.none.description'
+                    type='ingress'
+                  }}
+                />
+              </Hds::ApplicationState>
+            {{/if}}
+          </:content>
+        </A.Item>
+      {{/if}}
+      <A.Item
+        @containsInteractive={{true}}
+        @isOpen={{@model.egress_worker_filter}}
+        data-test-target-egress-workers-accordion-item
+      >
+        <:toggle>
+          <div class='accordion-item-toggle-content'>
+            <span>{{t
+                'resources.target.workers.accordion-label.egress-workers'
+              }}</span>
+            <Hds::Link::Standalone
+              @icon={{if @model.egress_worker_filter 'edit' 'plus-circle'}}
+              @text={{t
+                (if
+                  @model.egress_worker_filter
+                  'actions.edit-worker-filter'
+                  'actions.add-worker-filter'
+                )
+              }}
+              @route='scopes.scope.targets.target.edit-egress-worker-filter'
+            />
+          </div>
+        </:toggle>
+        <:content>
+          {{#if @model.egress_worker_filter}}
+            <Hds::CodeBlock
+              @maxHeight='300px'
+              @language='bash'
+              @hasCopyButton={{true}}
+              @value={{@model.egress_worker_filter}}
+              as |CB|
+            >
+              <CB.Title>{{t 'form.worker_filter.label'}}</CB.Title>
+              <CB.Description>{{t
+                  'resources.target.workers.worker-filter.description'
+                }}</CB.Description>
+            </Hds::CodeBlock>
+          {{else}}
+            <Hds::ApplicationState as |A|>
+              <A.Header @title={{t 'titles.no-worker-filter'}} />
+              <A.Body
+                @text={{t
+                  'resources.target.workers.messages.none.description'
+                  type='egress'
+                }}
+              />
+            </Hds::ApplicationState>
+          {{/if}}
+        </:content>
+      </A.Item>
+    </Hds::Accordion>
+  </page.body>
+
+</Rose::Layout::Page>

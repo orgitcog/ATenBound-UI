@@ -1,0 +1,81 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<div class='credential-panel-header'>
+  <div class='title hds-typography-display-400'>
+    {{t 'resources.session.credential.title_plural'}}
+  </div>
+  <Hds::Form::Toggle::Field
+    data-test-toggle-credentials
+    @value={{this.isRawApiVisible}}
+    {{on 'change' this.toggleCredentials}}
+    as |F|
+  >
+    <F.Label>
+      {{t 'resources.session.credential.actions.raw-api.show'}}
+    </F.Label>
+  </Hds::Form::Toggle::Field>
+</div>
+<div class='hds-typography-body-200'>
+  {{t 'resources.session.credential.description'}}
+</div>
+{{#each @credentials as |credential|}}
+  {{#if this.isRawApiVisible}}
+    <div class='raw-credential-panel-body'>
+      <Hds::CodeBlock
+        @language='json'
+        @value={{raw-json credential.rawCredential}}
+        @hasLineNumbers={{false}}
+        @hasCopyButton={{true}}
+        data-test-raw-secret
+        as |CB|
+      >
+        <CB.Title>
+
+          {{#if credential.source.name}}
+            {{credential.source.name}}
+          {{else}}
+            {{credential.source.id}}
+          {{/if}}
+        </CB.Title>
+        <CB.Description>
+          {{credential.source.description}}
+        </CB.Description>
+      </Hds::CodeBlock>
+    </div>
+  {{else}}
+    <div class='credential-panel-body'>
+      <div class='credential-header'>
+        <Hds::Text::Display class='credential-name' @weight='semibold'>
+          {{#if credential.source.name}}
+            {{credential.source.name}}
+          {{else}}
+            {{credential.source.id}}
+          {{/if}}
+        </Hds::Text::Display>
+        <Hds::Text::Body
+          class='credential-description'
+          @size='100'
+          @weight='semibold'
+        >
+          {{credential.source.description}}
+        </Hds::Text::Body>
+      </div>
+
+      <ul class='credential-secret'>
+        {{#if credential.secrets}}
+          {{#each (order-by credential.secrets this.customOrder) as |secret|}}
+            <li class='secret-container'>
+              <Hds::Text::Body
+                @weight='semibold'
+              >{{secret.key}}</Hds::Text::Body>
+              <HiddenSecret @secret={{secret.value}} />
+            </li>
+          {{/each}}
+        {{/if}}
+      </ul>
+    </div>
+  {{/if}}
+{{/each}}

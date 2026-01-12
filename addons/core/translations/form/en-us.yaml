@@ -1,0 +1,188 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: BUSL-1.1
+
+id:
+  label: ID
+external_id:
+  label: External ID
+  help: A read-only ID given by the plugin host catalog provider
+name:
+  label: Name
+  help: Name for identification purposes
+external_name:
+  label: External Name
+  help: A read-only name given by the plugin host catalog provider
+description:
+  label: Description
+  help: Description for identification purposes
+type:
+  label: Type
+  help: The type of the resource, to help differentiate schemas
+plugin_type:
+  label: plugin_type
+login_name:
+  label: Login Name
+  help: The account login name
+username:
+  label: Username
+set_password:
+  label: Password
+  help: Create a new password
+password:
+  label: Password
+grant:
+  label: Grant
+  help: A permissions grant string for a role
+address:
+  label: Address
+  help: An IP, host name, or other routable address
+current_password:
+  label: Current Password
+new_password:
+  label: New Password
+started:
+  label: Started
+status:
+  label: Status
+session_max_seconds:
+  label: Maximum Duration
+  help: The maximum duration of a session, in seconds.
+session_connection_limit:
+  label: Maximum Connections
+  help: The maximum number of connections allowed per session.  For unlimited, specify "-1".
+  rdp-windows-notice: 'Note: The Windows Remote Desktop Connection client requires a connection limit of 2 or higher'
+session_id:
+  label: Session ID
+worker_release_version:
+  label: Release Version
+  help: The version of the Boundary binary the worker is running.
+worker_authorized_actions:
+  label: Authorized Actions
+worker_last_seen:
+  label: Last Seen
+  help: Last time the worker reported status.
+worker_address:
+  help: URL and port for this worker.
+host_set:
+  label: Host Set
+grant_scope:
+  label: Grant Scope
+  help: Specify the scope to which this role applies.
+cluster-url:
+  label: Cluster URL
+  description: The Boundary URL to which to connect (e.g. protocol://host:port)
+proxy_url:
+  label: Proxy URL
+issuer:
+  label: Issuer
+  help: The issuer URL. Boundary expects only the schema, host, and port and will strip off ".well-known/openid-configuration" if present. This will be used for configuration discovery as well as for validation of the "iss" claim.
+client_id:
+  label: Client ID
+  help: An OAuth 2.0 Client Identifier valid at the Authorization Server.
+client_secret:
+  label: Client Secret
+  help: The client secret is set-only and may not be unset.
+client_secret_hmac:
+  label: Client Secret HMAC
+max_age:
+  label: Maximum Age
+  help: The OIDC "max_age" parameter sent to the Authorization Server indicating a maximum acceptable time in seconds since the user's last authentication before requiring the user to reauthenticate. 0 indicates an immediate need to reauthenticate.
+api_url_prefix:
+  label: API URL Prefix
+  help: The prefix that should be used for any URLs needed during the authentication flow. This includes the callback URL, the token retrieval URL, and the redirection URL used by the OIDC Authorization Server.
+disable_discovered_config_validation:
+  label: Disable discovered config validation
+  help: >
+    If the Authorization Server's discovered configuration contains values that do not match the configuration set on this auth method, this can be set to force the local configuration to override the discovered values.  This is useful in the case of slow-changing or incorrect values announced by the Authorization Server. NOTE: For safety, not providing this value will be treated the same as "false"; that is, every time the method is updated or the state is changed, this value must be set to "true" or it will be disabled.
+idp_ca_certs:
+  label: Certificates
+  help: PEM-encoded X.509 CA certificates that can be used as trust anchors when connecting to an OIDC provider.
+certificate:
+  label: Certificate
+allowed_audiences:
+  label: Allowed Audiences
+  help: Allowed audience claims for this auth method.
+claim:
+  label: Claim
+claims_scopes:
+  label: Claims Scopes
+  help: Claims scopes that will be requested during authentication.
+claims_scope:
+  label: Claims Scope
+account_claim_maps:
+  label: Account Claim Maps
+  help: >
+    Optional claim maps from custom claims to the standard claims of sub, name and email.  These maps are represented as key=value where the key equals the from_claim and the value equals the to_claim.  For example "oid=sub".
+account_claim_map:
+  label: Account Claim Map
+from_claim:
+  label: From Claim
+to_claim:
+  label: To Claim
+signing_algorithms:
+  label: Signing Algorithms
+  help: The signing algorithms allowed for the auth method.
+prompts:
+  label: Prompts
+  help: The prompts allowed for an OIDC auth method.
+algorithm:
+  label: Algorithm
+subject:
+  label: Subject
+email:
+  label: Email
+full_name:
+  label: Full Name
+key:
+  label: Key
+value:
+  label: Value
+operator:
+  label: Operator
+callback_url:
+  label: Callback URL
+  help: The URL to which the third-party provider sends the authentication response.  Paste this into the provider configuration.
+filter:
+  label: Filter
+  help: A boolean expression defining a filter run against the provided information.
+tenant_id:
+  label: Tenant/Directory ID
+  help: The tenant (directory) ID for your Azure Active Directory application.
+subscription_id:
+  label: Subscription ID
+  help: The subscription ID for the subscription with read access.
+access_key_id:
+  label: Access Key ID
+  help: The access key ID generated by AWS for the IAM user to use with this AWS Host Catalog.
+secret_access_key:
+  label: Secret Access Key
+  help: The secret access key generated by AWS for the IAM user to use with this AWS Host Catalog.
+secret:
+  label: Client Secret Value
+  help: The client secret value generated by Azure for Boundary to use for authentication.
+disable_credential_rotation:
+  label: Disable credential rotation
+  help: Azure host catalogs do not yet support credential rotation.
+dns_names:
+  label: Latest DNS Names
+  help: Read-only DNS names given by the plugin host catalog provider
+host:
+  label: Host
+ip_addresses:
+  label: Latest IP Addresses
+  help: Read-only public and private IP addresses given by the plugin host catalog provider
+sync-interval:
+  label: Sync Interval
+  help: Number of seconds between the time Boundary syncs hosts in this set.
+tags:
+  label: Tags
+secret-editor:
+  details: This secret is saved but won't be displayed
+  edit: Click to replace this secret
+created:
+  label: Created
+other_fields:
+  label: Other Fields
+  help: This information is provided by the server and cannot be edited in Boundary
+worker_filter:
+  label: Worker Filter

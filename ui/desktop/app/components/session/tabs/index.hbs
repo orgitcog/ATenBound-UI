@@ -1,0 +1,39 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{#if @model.target.isRDP}}
+  {{! RDP: Show content directly without tabs }}
+  {{#if (and @model.proxy_address @model.proxy_port)}}
+    <Session::ProxyUrl
+      @proxyAddress={{@model.proxy_address}}
+      @proxyPort={{@model.proxy_port}}
+      @targetType={{@model.target.type}}
+    />
+  {{/if}}
+
+  <Session::Details @model={{@model}} />
+{{else}}
+  {{! Non-RDP: Show tabbed interface }}
+  <Hds::Tabs as |T|>
+    <T.Tab>{{t 'titles.details'}}</T.Tab>
+    <T.Tab @icon='terminal' {{on 'click' this.openTerminal}}>
+      {{t 'resources.session.shell'}}
+    </T.Tab>
+    <T.Panel>
+      {{#if (and @model.proxy_address @model.proxy_port)}}
+        <Session::ProxyUrl
+          @proxyAddress={{@model.proxy_address}}
+          @proxyPort={{@model.proxy_port}}
+          @targetType={{@model.target.type}}
+        />
+      {{/if}}
+
+      <Session::Details @model={{@model}} />
+    </T.Panel>
+    <T.Panel>
+      <div id='terminal-container'></div>
+    </T.Panel>
+  </Hds::Tabs>
+{{/if}}

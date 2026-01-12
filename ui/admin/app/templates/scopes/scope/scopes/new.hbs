@@ -1,0 +1,62 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+{{page-title (t 'titles.new')}}
+{{#if @model.isOrg}}
+  <Breadcrumbs::Item
+    @text={{t 'resources.org.titles.new'}}
+    @route='scopes.scope.scopes.new'
+  />
+{{else if @model.isProject}}
+  <Breadcrumbs::Item
+    @text={{t 'resources.project.titles.new'}}
+    @route='scopes.scope.scopes.new'
+  />
+{{/if}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      {{#if @model.isOrg}}
+        <PH.Title>
+          {{t 'resources.org.titles.new'}}
+          <DocLink @doc='org.new' />
+        </PH.Title>
+        <PH.Description>
+          {{t 'resources.org.description'}}
+        </PH.Description>
+      {{else if @model.isProject}}
+        <PH.Title>
+          {{t 'resources.project.titles.new'}}
+          <DocLink @doc='project.new' />
+        </PH.Title>
+        <PH.Description>
+          {{t 'resources.project.description'}}
+        </PH.Description>
+      {{/if}}
+      {{#if (can 'create model' @model.currentScope collection='scopes')}}
+        <PH.Actions>
+          <Hds::Button
+            @route='scopes.scope.scopes.new'
+            @text={{t 'actions.create'}}
+          />
+        </PH.Actions>
+      {{/if}}
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body>
+    <Form::Scope
+      @model={{@model}}
+      @submit={{fn this.scopes.save @model}}
+      @cancel={{fn this.scopes.cancel @model}}
+    />
+  </page.body>
+
+</Rose::Layout::Page>

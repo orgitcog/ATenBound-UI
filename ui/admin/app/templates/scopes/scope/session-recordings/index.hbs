@@ -1,0 +1,301 @@
+{{!
+  Copyright (c) HashiCorp, Inc.
+  SPDX-License-Identifier: BUSL-1.1
+}}
+
+<Rose::Layout::Page as |page|>
+
+  <page.header>
+    <Hds::PageHeader as |PH|>
+      <PH.Breadcrumb>
+        <Breadcrumbs::Container />
+      </PH.Breadcrumb>
+      <PH.Title>
+        {{t 'resources.session-recording.title_plural'}}
+        <DocLink @doc='session-recording' />
+      </PH.Title>
+      <PH.Description>
+        {{t 'resources.session-recording.description'}}
+      </PH.Description>
+    </Hds::PageHeader>
+  </page.header>
+
+  <page.body class='search-filtering'>
+    {{#if @model.doSessionRecordingsExist}}
+      <div class='search-filtering-toolbar'>
+        <Hds::SegmentedGroup data-test-session-recordings-bar as |S|>
+          <S.TextInput
+            @value={{this.search}}
+            @type='search'
+            placeholder={{t 'actions.search'}}
+            aria-label={{t 'actions.search'}}
+            {{on 'input' this.handleSearchInput}}
+          />
+          <S.Dropdown name='time' as |D|>
+            <D.ToggleButton
+              @text={{t 'resources.session-recording.filters.time.title'}}
+              @color='secondary'
+            />
+            {{#each this.timeOptions as |time|}}
+              <D.Checkmark
+                @selected={{eq time.id this.time}}
+                {{on 'click' (fn this.changeTimeFilter time.id D.close)}}
+              >
+                {{time.name}}
+              </D.Checkmark>
+            {{/each}}
+          </S.Dropdown>
+          <S.Generic>
+            <Dropdown
+              name='user'
+              @toggleText={{t 'resources.user.title'}}
+              @itemOptions={{this.userFilters.options}}
+              @checkedItems={{this.users}}
+              @applyFilter={{fn this.applyFilter 'users'}}
+              @isSearchable={{true}}
+              @searchTerm={{this.userFilters.search}}
+              @updateSearchTerm={{fn this.onFilterSearch.perform 'userFilters'}}
+              @isLoading={{or
+                this.onFilterSearch.isRunning
+                this.loadItems.isRunning
+              }}
+              as |FD selectItem itemOptions|
+            >
+              {{#each itemOptions as |itemOption|}}
+                <FD.Checkbox
+                  @value={{itemOption.id}}
+                  checked={{includes itemOption.id this.users}}
+                  {{on 'change' selectItem}}
+                >
+                  {{itemOption.name}}
+                </FD.Checkbox>
+              {{/each}}
+            </Dropdown>
+          </S.Generic>
+          <S.Generic>
+            <Dropdown
+              name='scope'
+              @toggleText={{t 'resources.scope.title'}}
+              @itemOptions={{this.scopeFilters.options}}
+              @checkedItems={{this.scopes}}
+              @applyFilter={{fn this.applyFilter 'scopes'}}
+              @isSearchable={{true}}
+              @searchTerm={{this.scopeFilters.search}}
+              @updateSearchTerm={{fn
+                this.onFilterSearch.perform
+                'scopeFilters'
+              }}
+              @isLoading={{or
+                this.onFilterSearch.isRunning
+                this.loadItems.isRunning
+              }}
+              as |FD selectItem itemOptions|
+            >
+              {{#each-in
+                (group-by 'parent_scope_id' itemOptions)
+                as |orgId items|
+              }}
+                <FD.Generic>
+                  <Hds::Icon @name='org' @isInline={{true}} />
+                  {{this.orgName orgId}}
+                </FD.Generic>
+                {{#each items as |project|}}
+                  <FD.Checkbox
+                    @value={{project.id}}
+                    checked={{includes project.id this.scopes}}
+                    {{on 'change' selectItem}}
+                  >
+                    {{project.name}}
+                  </FD.Checkbox>
+                {{/each}}
+              {{/each-in}}
+            </Dropdown>
+          </S.Generic>
+          <S.Generic>
+            <Dropdown
+              name='target'
+              @toggleText={{t 'resources.target.title'}}
+              @itemOptions={{this.targetFilters.options}}
+              @checkedItems={{this.targets}}
+              @applyFilter={{fn this.applyFilter 'targets'}}
+              @isSearchable={{true}}
+              @searchTerm={{this.targetFilters.search}}
+              @updateSearchTerm={{fn
+                this.onFilterSearch.perform
+                'targetFilters'
+              }}
+              @isLoading={{or
+                this.onFilterSearch.isRunning
+                this.loadItems.isRunning
+              }}
+              as |FD selectItem itemOptions|
+            >
+              {{#each itemOptions as |itemOption|}}
+                <FD.Checkbox
+                  @value={{itemOption.id}}
+                  checked={{includes itemOption.id this.targets}}
+                  {{on 'change' selectItem}}
+                >
+                  {{itemOption.name}}
+                </FD.Checkbox>
+              {{/each}}
+            </Dropdown>
+          </S.Generic>
+        </Hds::SegmentedGroup>
+        <span>
+          <ToolbarRefresher @onClick={{this.refresh}} />
+        </span>
+      </div>
+
+      <FilterTags @filters={{this.filters}} />
+
+      {{#if @model.sessionRecordings}}
+        <Hds::Table
+          @valign='middle'
+          @onSort={{this.onSort}}
+          @sortBy={{this.sortAttribute}}
+          @sortOrder={{this.sortDirection}}
+        >
+          <:head as |H|>
+            <H.Tr>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'created_time'}}
+                @sortOrder={{if (eq 'created_time' H.sortBy) H.sortOrder}}
+              >{{t 'resources.session-recording.form.time.label'}}</H.ThSort>
+              <H.ThSort
+                @onClickSort={{fn H.setSortBy 'state'}}
+                @sortOrder={{if (eq 'state' H.sortBy) H.sortOrder}}
+              >{{t 'resources.session-recording.form.status.label'}}</H.ThSort>
+              <H.Th>{{t 'resources.session-recording.form.user.label'}}</H.Th>
+              <H.Th>{{t 'resources.session-recording.form.target.label'}}</H.Th>
+              <H.Th>{{t
+                  'resources.session-recording.form.duration.label'
+                }}</H.Th>
+              <H.Th @isVisuallyHidden={{true}} @align='right'>{{t
+                  'actions.view'
+                }}</H.Th>
+            </H.Tr>
+          </:head>
+          <:body as |B|>
+            {{#each @model.sessionRecordings as |data|}}
+              <B.Tr>
+                {{! Created Time }}
+                <B.Td>
+                  {{#if data.created_time}}
+                    <Hds::Text::Body @color='faint'>
+                      <time datetime={{format-date-iso data.created_time}}>
+                        {{format-date-iso data.created_time}}
+                      </time>
+                    </Hds::Text::Body>
+                  {{/if}}
+                </B.Td>
+                {{! Status }}
+                <B.Td>
+                  <SessionRecording::Status @status={{data.state}} />
+                </B.Td>
+                {{! User }}
+                <B.Td>
+                  <div
+                    class='session-recording-list-cell-item hds-font-weight-semibold'
+                  >
+                    <span><Hds::Icon @name='user' @isInline={{true}} /></span>
+                    <span>{{data.userDisplayName}}</span>
+                  </div>
+                </B.Td>
+                {{! Target }}
+                <B.Td>
+                  <div
+                    class='session-recording-list-cell-item target-column hds-font-weight-semibold'
+                  >
+                    <span>
+                      <Hds::Icon @name='target' @isInline={{true}} />
+                      {{data.create_time_values.target.name}}
+                    </span>
+                    <span>
+                      <Hds::Badge
+                        @text={{data.targetScopeDisplayName}}
+                        @icon='grid'
+                      />
+                    </span>
+                  </div>
+                </B.Td>
+                {{! Duration }}
+                <B.Td>
+                  {{#if data.duration}}
+                    <div
+                      class='session-recording-list-cell-item hds-foreground-faint'
+                    >
+                      <span><Hds::Icon
+                          @name='clock'
+                          @isInline={{true}}
+                        /></span>
+                      <span>
+                        {{format-time-duration data.duration}}
+                      </span>
+                    </div>
+                  {{/if}}
+                </B.Td>
+                <B.Td align='right'>
+                  {{#if (can 'read session-recording' data)}}
+                    <Hds::Button
+                      @icon='arrow-right'
+                      @iconPosition='trailing'
+                      @color='secondary'
+                      @text={{t 'actions.view'}}
+                      @route='scopes.scope.session-recordings.session-recording.channels-by-connection'
+                      @model={{data.id}}
+                    />
+                  {{/if}}
+                </B.Td>
+              </B.Tr>
+            {{/each}}
+          </:body>
+        </Hds::Table>
+        <Rose::Pagination
+          @totalItems={{@model.totalItems}}
+          @currentPage={{this.page}}
+          @currentPageSize={{this.pageSize}}
+        />
+      {{else}}
+        <Hds::ApplicationState data-test-no-session-recording-results as |A|>
+          <A.Header @title={{t 'titles.no-results-found'}} />
+          <A.Body
+            @text={{t
+              (if
+                this.search
+                'descriptions.no-search-results'
+                'descriptions.no-filter-results'
+              )
+              query=this.search
+              resource=(t 'resources.session-recording.title_plural')
+            }}
+          />
+        </Hds::ApplicationState>
+      {{/if}}
+    {{else}}
+      <Hds::ApplicationState as |A|>
+        <A.Header
+          @title={{t 'resources.session-recording.messages.none.title'}}
+        />
+        <A.Body
+          @text={{t
+            (if
+              @model.doStorageBucketsExist
+              'resources.session-recording.messages.none.description'
+              'resources.session-recording.messages.none.no-storage-bucket-description'
+            )
+          }}
+        />
+        {{#unless @model.doStorageBucketsExist}}
+          <A.Footer as |F|>
+            <F.LinkStandalone
+              @icon='plus-circle'
+              @text={{t 'resources.storage-bucket.messages.none.link'}}
+              @route='scopes.scope.storage-buckets.new'
+            />
+          </A.Footer>
+        {{/unless}}
+      </Hds::ApplicationState>
+    {{/if}}
+  </page.body>
+</Rose::Layout::Page>

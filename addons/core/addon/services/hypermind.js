@@ -12,7 +12,6 @@ import { tracked } from '@glimmer/tracking';
  * Provides multi-layered scope management with cognitive optimization
  */
 export default class HyperMindService extends Service {
-  @service scope;
   @service tensorLogic;
 
   // =attributes
@@ -250,6 +249,6 @@ export default class HyperMindService extends Service {
   }
 
   _generateScopeId() {
-    return `scope_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `scope_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }

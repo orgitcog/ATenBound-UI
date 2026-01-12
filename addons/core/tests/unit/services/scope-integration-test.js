@@ -82,8 +82,10 @@ module('Unit | Service | scope (with framework integration)', function (hooks) {
   test('initializeScopeFrameworks handles null scope gracefully', function (assert) {
     const service = this.owner.lookup('service:scope');
 
-    assert.ok(() => service.initializeScopeFrameworks(null), 'handles null without error');
-    assert.ok(() => service.initializeScopeFrameworks(undefined), 'handles undefined without error');
+    // Should not throw
+    assert.expect(0);
+    service.initializeScopeFrameworks(null);
+    service.initializeScopeFrameworks(undefined);
   });
 
   test('setOrg integrates with frameworks', function (assert) {

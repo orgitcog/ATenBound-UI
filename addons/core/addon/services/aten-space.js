@@ -14,7 +14,6 @@ import { tracked } from '@glimmer/tracking';
 export default class ATenSpaceService extends Service {
   @service tensorLogic;
   @service hypermind;
-  @service scope;
 
   // =attributes
 
@@ -50,7 +49,7 @@ export default class ATenSpaceService extends Service {
       domain: config.domain || null,
       metadata: {
         created: new Date().toISOString(),
-        scopeId: this.scope.org?.id || this.scope.project?.id || 'global',
+        scopeId: config.scopeId || 'global',
       },
     };
     this.boundaries[name] = boundary;
@@ -75,7 +74,7 @@ export default class ATenSpaceService extends Service {
       operations: [],
       metadata: {
         created: new Date().toISOString(),
-        scopeId: this.scope.org?.id || this.scope.project?.id || 'global',
+        scopeId: config.scopeId || 'global',
       },
     };
     this.spaceRegistry[name] = space;
@@ -130,6 +129,7 @@ export default class ATenSpaceService extends Service {
         scopeType: scopeModel.type,
         scopeId: scopeModel.id,
       },
+      scopeId: scopeModel.id,
     });
 
     // Create corresponding space
@@ -137,6 +137,7 @@ export default class ATenSpaceService extends Service {
       boundary: boundaryName,
       shape: [1, 1], // Can be extended based on scope complexity
       dimensions: scopeModel.isProject ? 3 : scopeModel.isOrg ? 2 : 1,
+      scopeId: scopeModel.id,
     });
   }
 
@@ -218,6 +219,6 @@ export default class ATenSpaceService extends Service {
   }
 
   _generateLinkId() {
-    return `link_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `link_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }
